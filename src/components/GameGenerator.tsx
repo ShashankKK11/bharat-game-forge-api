@@ -1,13 +1,12 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Wand2, Download, Play, Share2, Sparkles } from 'lucide-react';
+import { Wand2, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import GamePreview from './GamePreview';
 
 const GameGenerator = () => {
   const [gameTitle, setGameTitle] = useState('');
@@ -98,7 +97,10 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
-            <Wand2 className="w-12 h-12 text-purple-600" />
+            <div className="relative">
+              <Wand2 className="w-12 h-12 text-purple-600 animate-pulse" />
+              <div className="absolute -top-2 -right-2 w-4 h-4 bg-yellow-400 rounded-full animate-ping"></div>
+            </div>
           </div>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Generate Your Game</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -179,7 +181,7 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
               <Button
                 onClick={handleGenerate}
                 disabled={isGenerating}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 text-lg"
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 {isGenerating ? (
                   <div className="flex items-center gap-2">
@@ -199,69 +201,17 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
           {/* Generated Game Display */}
           <div className="space-y-6">
             {generatedGame ? (
-              <Card className="shadow-xl border-0 bg-gradient-to-br from-green-50 to-blue-50">
-                <CardHeader>
-                  <CardTitle className="text-2xl text-green-800">
-                    🎮 {generatedGame.title}
-                  </CardTitle>
-                  <div className="flex gap-2">
-                    <Badge variant="secondary">{generatedGame.genre}</Badge>
-                    <Badge variant="outline">{generatedGame.theme}</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-2">Game Mechanics:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {generatedGame.mechanics.map((mechanic, index) => (
-                        <Badge key={index} variant="secondary" className="bg-blue-100 text-blue-800">
-                          {mechanic}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-2">Features:</h4>
-                    <div className="space-y-1">
-                      {generatedGame.features.map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2 text-sm text-gray-700">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          {feature}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-2">Generated Code:</h4>
-                    <div className="bg-gray-900 text-green-400 p-4 rounded-lg text-sm font-mono overflow-x-auto">
-                      <pre>{generatedGame.codeSnippet}</pre>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3 pt-4">
-                    <Button className="flex-1 bg-green-600 hover:bg-green-700">
-                      <Play className="w-4 h-4 mr-2" />
-                      Play Now
-                    </Button>
-                    <Button variant="outline" className="flex-1">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                    <Button variant="outline" size="icon">
-                      <Share2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <GamePreview game={generatedGame} />
             ) : (
               <Card className="shadow-xl border-0 bg-gray-50 border-dashed border-2 border-gray-300">
                 <CardContent className="py-16 text-center">
                   <div className="text-gray-400 mb-4">
-                    <Wand2 className="w-16 h-16 mx-auto mb-4" />
+                    <div className="relative inline-block">
+                      <Wand2 className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                      <div className="absolute top-0 right-0 w-6 h-6 bg-purple-200 rounded-full animate-bounce"></div>
+                    </div>
                     <h3 className="text-xl font-semibold">Your Generated Game Will Appear Here</h3>
-                    <p className="text-gray-500 mt-2">Fill in the details and click generate to create your game</p>
+                    <p className="text-gray-500 mt-2">Fill in the details and click generate to create your playable game</p>
                   </div>
                 </CardContent>
               </Card>
