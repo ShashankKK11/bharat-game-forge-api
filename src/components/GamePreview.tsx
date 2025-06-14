@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Play, Download, Share2, Eye, Code, Gamepad2 } from 'lucide-react';
+import FullGameEngine from './FullGameEngine';
 
 interface GamePreviewProps {
   game: {
@@ -19,179 +20,47 @@ interface GamePreviewProps {
 }
 
 const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
+  const [showFullGame, setShowFullGame] = useState(false);
+
   const handlePlayNow = () => {
-    // Create a simple game preview window
-    const gameWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
-    if (gameWindow) {
-      gameWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>${game.title} - Game Preview</title>
-          <style>
-            body {
-              margin: 0;
-              padding: 20px;
-              font-family: 'Arial', sans-serif;
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              color: white;
-              text-align: center;
-            }
-            .game-container {
-              max-width: 600px;
-              margin: 0 auto;
-              background: rgba(255,255,255,0.1);
-              padding: 30px;
-              border-radius: 20px;
-              backdrop-filter: blur(10px);
-              box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            }
-            .game-title {
-              font-size: 2.5em;
-              margin-bottom: 20px;
-              text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            }
-            .game-demo {
-              width: 100%;
-              height: 300px;
-              background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-              background-size: 400% 400%;
-              animation: gradientShift 3s ease infinite;
-              border-radius: 15px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 1.5em;
-              font-weight: bold;
-              margin: 20px 0;
-              position: relative;
-              overflow: hidden;
-            }
-            .game-demo::before {
-              content: '${game.title}';
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-              z-index: 2;
-            }
-            .floating-elements {
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              top: 0;
-              left: 0;
-            }
-            .floating-element {
-              position: absolute;
-              animation: float 4s ease-in-out infinite;
-              opacity: 0.7;
-            }
-            .floating-element:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-            .floating-element:nth-child(2) { top: 60%; right: 15%; animation-delay: 1s; }
-            .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
-            .floating-element:nth-child(4) { top: 40%; right: 30%; animation-delay: 3s; }
-            @keyframes gradientShift {
-              0% { background-position: 0% 50%; }
-              50% { background-position: 100% 50%; }
-              100% { background-position: 0% 50%; }
-            }
-            @keyframes float {
-              0%, 100% { transform: translateY(0px) rotate(0deg); }
-              25% { transform: translateY(-10px) rotate(5deg); }
-              50% { transform: translateY(-5px) rotate(-5deg); }
-              75% { transform: translateY(-15px) rotate(3deg); }
-            }
-            .info-section {
-              margin: 20px 0;
-              text-align: left;
-            }
-            .badge {
-              display: inline-block;
-              background: rgba(255,255,255,0.2);
-              padding: 5px 15px;
-              border-radius: 20px;
-              margin: 5px;
-              font-size: 0.9em;
-            }
-            .close-btn {
-              position: fixed;
-              top: 20px;
-              right: 20px;
-              background: rgba(255,255,255,0.2);
-              border: none;
-              color: white;
-              padding: 10px 20px;
-              border-radius: 20px;
-              cursor: pointer;
-              font-size: 1em;
-            }
-            .close-btn:hover {
-              background: rgba(255,255,255,0.3);
-            }
-          </style>
-        </head>
-        <body>
-          <button class="close-btn" onclick="window.close()">✕ Close</button>
-          <div class="game-container">
-            <h1 class="game-title">🎮 ${game.title}</h1>
-            <div class="game-demo">
-              <div class="floating-elements">
-                <div class="floating-element">🎯</div>
-                <div class="floating-element">⭐</div>
-                <div class="floating-element">🎊</div>
-                <div class="floating-element">🚀</div>
-              </div>
-            </div>
-            <div class="info-section">
-              <h3>Game Features:</h3>
-              ${game.features.map(feature => `<span class="badge">${feature}</span>`).join('')}
-            </div>
-            <div class="info-section">
-              <h3>Game Mechanics:</h3>
-              ${game.mechanics.map(mechanic => `<span class="badge">${mechanic}</span>`).join('')}
-            </div>
-            <p style="margin-top: 30px; font-style: italic; opacity: 0.8;">
-              This is a preview of your generated ${game.genre} game with ${game.theme} theme.
-              <br>The full game would include interactive gameplay, sound effects, and complete mechanics!
-            </p>
-          </div>
-        </body>
-        </html>
-      `);
-      gameWindow.document.close();
-    }
+    setShowFullGame(true);
+  };
+
+  const handleCloseGame = () => {
+    setShowFullGame(false);
   };
 
   const handleDownload = () => {
-    // Create a downloadable HTML file with the game
+    // Create a comprehensive downloadable game package
     const gameHTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${game.title} - Indic Game</title>
+    <title>${game.title} - Complete Indic Game</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            margin: 0;
-            padding: 0;
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            overflow: hidden;
-        }
-        .game-container {
-            width: 100vw;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+        }
+        .game-container {
+            max-width: 800px;
+            width: 90%;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             text-align: center;
         }
         .game-title {
-            font-size: 3em;
+            font-size: 2.5em;
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             animation: glow 2s ease-in-out infinite alternate;
@@ -200,64 +69,315 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
             from { text-shadow: 2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.3); }
             to { text-shadow: 2px 2px 4px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.6); }
         }
-        .game-area {
-            width: 80%;
-            height: 60%;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            position: relative;
-            overflow: hidden;
+        .game-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
         }
-        .instructions {
-            position: absolute;
-            bottom: 50px;
-            font-size: 1.2em;
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.9em;
             opacity: 0.8;
+            margin-top: 5px;
+        }
+        .play-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin: 20px 10px;
+        }
+        .play-button:hover {
+            transform: scale(1.05);
+        }
+        .features-list {
+            text-align: left;
+            margin: 20px 0;
+        }
+        .feature-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
         .cultural-elements {
-            position: absolute;
+            position: fixed;
             font-size: 2em;
-            animation: float 4s ease-in-out infinite;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.3;
+            pointer-events: none;
         }
         .element-1 { top: 10%; left: 10%; animation-delay: 0s; }
-        .element-2 { top: 20%; right: 15%; animation-delay: 1s; }
-        .element-3 { bottom: 20%; left: 20%; animation-delay: 2s; }
-        .element-4 { top: 40%; right: 10%; animation-delay: 3s; }
+        .element-2 { top: 20%; right: 15%; animation-delay: 2s; }
+        .element-3 { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .element-4 { top: 60%; right: 10%; animation-delay: 1s; }
+        .element-5 { bottom: 20%; right: 25%; animation-delay: 3s; }
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(-10px) rotate(240deg); }
+        }
+        .quiz-area {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .question {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .option {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid transparent;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .option:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: #4ecdc4;
+        }
+        .option.selected {
+            background: #4ecdc4;
+            border-color: #45b7d1;
         }
     </style>
 </head>
 <body>
+    <div class="cultural-elements element-1">🏛️</div>
+    <div class="cultural-elements element-2">🎭</div>
+    <div class="cultural-elements element-3">📿</div>
+    <div class="cultural-elements element-4">🪔</div>
+    <div class="cultural-elements element-5">🕉️</div>
+    
     <div class="game-container">
-        <h1 class="game-title">${game.title}</h1>
-        <div class="game-area">
-            <div class="cultural-elements element-1">🏛️</div>
-            <div class="cultural-elements element-2">🎭</div>
-            <div class="cultural-elements element-3">📿</div>
-            <div class="cultural-elements element-4">🪔</div>
-            <div>
-                <h2>Welcome to ${game.title}!</h2>
-                <p>Genre: ${game.genre} | Theme: ${game.theme}</p>
-                <p style="margin-top: 30px; font-size: 0.8em; opacity: 0.7;">
-                    Generated with Indic Game Generator
-                </p>
+        <h1 class="game-title">🎮 ${game.title}</h1>
+        <p style="font-size: 1.2em; margin-bottom: 20px; opacity: 0.9;">
+            ${game.description}
+        </p>
+        
+        <div class="game-stats">
+            <div class="stat-card">
+                <span class="stat-value">🏆</span>
+                <div class="stat-label">Genre: ${game.genre}</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">🎨</span>
+                <div class="stat-label">Theme: ${game.theme}</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">⭐</span>
+                <div class="stat-label">Score: <span id="score">0</span></div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">❤️</span>
+                <div class="stat-label">Lives: <span id="lives">3</span></div>
             </div>
         </div>
-        <div class="instructions">
-            Click anywhere to start your cultural gaming adventure!
+
+        <div class="features-list">
+            <h3 style="margin-bottom: 15px;">🎯 Game Features:</h3>
+            ${game.features.map(feature => `<div class="feature-item">✨ ${feature}</div>`).join('')}
+        </div>
+
+        <div class="quiz-area" id="quizArea" style="display: none;">
+            <div class="question" id="questionText"></div>
+            <div class="options" id="optionsContainer"></div>
+            <button class="play-button" id="submitAnswer" style="display: none;">Submit Answer</button>
+            <div id="result" style="margin-top: 20px;"></div>
+        </div>
+
+        <div id="gameControls">
+            <button class="play-button" onclick="startGame()">🚀 Start Game</button>
+            <button class="play-button" onclick="showInstructions()">📖 Instructions</button>
+        </div>
+
+        <div id="instructions" style="display: none; text-align: left; margin-top: 20px;">
+            <h3>🎮 How to Play:</h3>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li>Answer cultural questions to progress through levels</li>
+                <li>Each correct answer gives you points and experience</li>
+                <li>Wrong answers cost you a life</li>
+                <li>Complete all levels to win the game</li>
+                <li>Learn about ${game.theme} as you play!</li>
+            </ul>
         </div>
     </div>
+
     <script>
-        document.addEventListener('click', function() {
-            alert('Welcome to ${game.title}! This is a demo version. The full game would include interactive gameplay, cultural storytelling, and immersive mechanics based on ${game.theme}.');
-        });
+        let gameState = {
+            score: 0,
+            lives: 3,
+            level: 1,
+            currentQuestion: 0
+        };
+
+        const questions = [
+            {
+                question: "What is the main theme of this game?",
+                options: ["${game.theme}", "Modern Technology", "Space Adventure", "Sports"],
+                correct: 0,
+                explanation: "This game focuses on ${game.theme} to promote cultural learning."
+            },
+            {
+                question: "Which genre best describes this game?",
+                options: ["Action", "${game.genre}", "Horror", "Racing"],
+                correct: 1,
+                explanation: "This is a ${game.genre} game designed for cultural education."
+            },
+            {
+                question: "What is the primary goal of playing this game?",
+                options: ["Earning money", "Learning culture", "Defeating enemies", "Racing cars"],
+                correct: 1,
+                explanation: "The main goal is to learn about ${game.theme} through interactive gameplay."
+            }
+        ];
+
+        function startGame() {
+            document.getElementById('gameControls').style.display = 'none';
+            document.getElementById('instructions').style.display = 'none';
+            document.getElementById('quizArea').style.display = 'block';
+            loadQuestion();
+        }
+
+        function showInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function loadQuestion() {
+            if (gameState.currentQuestion >= questions.length) {
+                endGame();
+                return;
+            }
+
+            const question = questions[gameState.currentQuestion];
+            document.getElementById('questionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectOption(index);
+                optionDiv.dataset.index = index;
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            document.getElementById('submitAnswer').style.display = 'none';
+            document.getElementById('result').innerHTML = '';
+        }
+
+        function selectOption(index) {
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector(\`[data-index="\${index}"]\`).classList.add('selected');
+            document.getElementById('submitAnswer').style.display = 'block';
+            document.getElementById('submitAnswer').onclick = () => checkAnswer(index);
+        }
+
+        function checkAnswer(selectedIndex) {
+            const question = questions[gameState.currentQuestion];
+            const isCorrect = selectedIndex === question.correct;
+            
+            if (isCorrect) {
+                gameState.score += 100;
+                document.getElementById('score').textContent = gameState.score;
+                document.getElementById('result').innerHTML = \`
+                    <div style="color: #4ecdc4; font-size: 1.2em;">
+                        🎉 Correct! +100 points<br>
+                        <small>\${question.explanation}</small>
+                    </div>
+                \`;
+            } else {
+                gameState.lives--;
+                document.getElementById('lives').textContent = gameState.lives;
+                document.getElementById('result').innerHTML = \`
+                    <div style="color: #ff6b6b; font-size: 1.2em;">
+                        ❌ Incorrect! -1 life<br>
+                        <small>\${question.explanation}</small>
+                    </div>
+                \`;
+                
+                if (gameState.lives <= 0) {
+                    setTimeout(() => endGame(false), 2000);
+                    return;
+                }
+            }
+
+            gameState.currentQuestion++;
+            setTimeout(() => {
+                if (gameState.currentQuestion < questions.length) {
+                    loadQuestion();
+                } else {
+                    endGame(true);
+                }
+            }, 3000);
+        }
+
+        function endGame(won = true) {
+            document.getElementById('quizArea').innerHTML = \`
+                <div style="text-align: center;">
+                    <h2 style="font-size: 2.5em; margin-bottom: 20px;">
+                        \${won ? '🏆 Congratulations!' : '💔 Game Over'}
+                    </h2>
+                    <p style="font-size: 1.3em; margin-bottom: 20px;">
+                        Final Score: \${gameState.score}<br>
+                        Lives Remaining: \${gameState.lives}
+                    </p>
+                    <p style="margin-bottom: 30px;">
+                        \${won ? 
+                            'You have successfully completed your cultural journey through ' + '${game.theme}!' :
+                            'Better luck next time! Keep learning about ' + '${game.theme}.'
+                        }
+                    </p>
+                    <button class="play-button" onclick="location.reload()">🔄 Play Again</button>
+                </div>
+            \`;
+        }
+
+        // Auto-save progress
+        setInterval(() => {
+            localStorage.setItem('gameProgress', JSON.stringify(gameState));
+        }, 5000);
+
+        // Load saved progress
+        window.onload = () => {
+            const saved = localStorage.getItem('gameProgress');
+            if (saved) {
+                const savedState = JSON.parse(saved);
+                if (savedState.score > 0) {
+                    if (confirm('Continue from saved game?')) {
+                        gameState = savedState;
+                        document.getElementById('score').textContent = gameState.score;
+                        document.getElementById('lives').textContent = gameState.lives;
+                    }
+                }
+            }
+        };
     </script>
 </body>
 </html>`;
@@ -266,10 +386,24 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${game.title.replace(/\s+/g, '_')}.html`;
+    a.download = `${game.title.replace(/\s+/g, '_')}_Complete_Game.html`;
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  if (showFullGame) {
+    return (
+      <FullGameEngine 
+        gameData={{
+          title: game.title,
+          genre: game.genre,
+          theme: game.theme,
+          description: game.description
+        }}
+        onClose={handleCloseGame}
+      />
+    );
+  }
 
   return (
     <Card className="shadow-xl border-0 bg-gradient-to-br from-green-50 to-blue-50">
@@ -296,7 +430,7 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
           <div className="relative z-10">
             <div className="text-6xl mb-4 animate-bounce">🎮</div>
             <h3 className="text-2xl font-bold mb-2">{game.title}</h3>
-            <p className="text-lg opacity-90">Ready to Play!</p>
+            <p className="text-lg opacity-90">Complete Interactive Game Ready!</p>
           </div>
           <div className="absolute top-4 right-4 text-4xl animate-spin">⭐</div>
           <div className="absolute bottom-4 left-4 text-3xl animate-pulse">🎯</div>
@@ -342,7 +476,7 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
             className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <Play className="w-5 h-5 mr-2" />
-            Play Now
+            Play Complete Game
           </Button>
           <Button 
             onClick={handleDownload}
@@ -350,7 +484,7 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
             className="flex-1 border-2 border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300"
           >
             <Download className="w-5 h-5 mr-2" />
-            Download Game
+            Download Complete Game
           </Button>
           <Button variant="outline" size="icon" className="shadow-md hover:shadow-lg transition-all duration-300">
             <Share2 className="w-4 h-4" />
