@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const GameNameGenerator = () => {
   const [username, setUsername] = useState('');
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState('Pw1crpr6q9rLgf9zPJtI118hQ5jqp6dbsIPD4fwMZGXYeYXJuUpbdhpLN1mR4gojil5FAcwoGCILV5OGkmCxMVOzcVsKzAWj1VYJa95CYvEX6z5iKY');
   const [generatedName, setGeneratedName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -104,31 +104,6 @@ const GameNameGenerator = () => {
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="apiKey" className="text-sm font-medium text-gray-700">
-                    Zylalabs API Key
-                  </Label>
-                  <Input
-                    id="apiKey"
-                    type="password"
-                    placeholder="Enter your Zylalabs API key"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    className="mt-1"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Get your API key from{' '}
-                    <a 
-                      href="https://zylalabs.com" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      Zylalabs
-                    </a>
-                  </p>
-                </div>
-
-                <div>
                   <Label htmlFor="username" className="text-sm font-medium text-gray-700">
                     Username / Base Name
                   </Label>
@@ -140,6 +115,31 @@ const GameNameGenerator = () => {
                     onChange={(e) => setUsername(e.target.value)}
                     className="mt-1"
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="apiKey" className="text-sm font-medium text-gray-700">
+                    Zylalabs API Key (Optional - Default Provided)
+                  </Label>
+                  <Input
+                    id="apiKey"
+                    type="password"
+                    placeholder="API key is pre-filled"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="mt-1"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    A default API key is provided. You can use your own from{' '}
+                    <a 
+                      href="https://zylalabs.com" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Zylalabs
+                    </a>
+                  </p>
                 </div>
               </div>
 
