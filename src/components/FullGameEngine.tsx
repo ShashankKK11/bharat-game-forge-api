@@ -15,7 +15,10 @@ import {
   Gamepad2,
   Trophy,
   Target,
-  Sparkles
+  Sparkles,
+  Sword,
+  Shield,
+  Bomb
 } from 'lucide-react';
 
 interface GameState {
@@ -29,6 +32,10 @@ interface GameState {
   gameTime: number;
   isPlaying: boolean;
   isPaused: boolean;
+  health?: number;
+  energy?: number;
+  combo?: number;
+  enemiesDefeated?: number;
 }
 
 interface Question {
@@ -39,6 +46,16 @@ interface Question {
   points: number;
   category: string;
   explanation: string;
+}
+
+interface ActionChallenge {
+  id: number;
+  type: 'combat' | 'dodge' | 'collect' | 'boss';
+  description: string;
+  instructions: string;
+  timeLimit: number;
+  targets?: number;
+  difficulty: 'easy' | 'medium' | 'hard';
 }
 
 interface GameData {
@@ -53,7 +70,6 @@ interface FullGameEngineProps {
   onClose: () => void;
 }
 
-// Expanded question database for all themes
 const createQuestionDatabase = (theme: string) => {
   const questionSets = {
     'mythology - ramayana': [
@@ -181,6 +197,73 @@ const createQuestionDatabase = (theme: string) => {
   return questionSets[theme] || questionSets['mythology - ramayana'];
 };
 
+const createActionChallenges = (theme: string) => {
+  const challengeSets = {
+    'mythology - ramayana': [
+      {
+        id: 1,
+        type: 'combat' as const,
+        description: "Hanuman faces demon guards!",
+        instructions: "Click rapidly to defeat the demon guards blocking your path!",
+        timeLimit: 15,
+        targets: 5,
+        difficulty: 'easy' as const
+      },
+      {
+        id: 2,
+        type: 'dodge' as const,
+        description: "Dodge Ravana's fire attacks!",
+        instructions: "Click left and right to dodge the incoming fire projectiles!",
+        timeLimit: 20,
+        targets: 8,
+        difficulty: 'medium' as const
+      },
+      {
+        id: 3,
+        type: 'boss' as const,
+        description: "Final battle with Ravana!",
+        instructions: "Combine all your skills to defeat the ten-headed demon king!",
+        timeLimit: 30,
+        targets: 1,
+        difficulty: 'hard' as const
+      }
+    ],
+    'mythology - mahabharata': [
+      {
+        id: 1,
+        type: 'combat' as const,
+        description: "Arjuna's archery training!",
+        instructions: "Click on targets to practice your archery skills!",
+        timeLimit: 12,
+        targets: 6,
+        difficulty: 'easy' as const
+      },
+      {
+        id: 2,
+        type: 'collect' as const,
+        description: "Gather divine weapons!",
+        instructions: "Collect the glowing weapons that appear on screen!",
+        timeLimit: 18,
+        targets: 10,
+        difficulty: 'medium' as const
+      }
+    ],
+    'architecture - temples': [
+      {
+        id: 1,
+        type: 'combat' as const,
+        description: "Defend the temple!",
+        instructions: "Click on invaders to protect the sacred temple!",
+        timeLimit: 20,
+        targets: 8,
+        difficulty: 'medium' as const
+      }
+    ]
+  };
+
+  return challengeSets[theme] || challengeSets['mythology - ramayana'];
+};
+
 const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) => {
   const [gameState, setGameState] = useState<GameState>({
     currentLevel: 1,
@@ -192,18 +275,26 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     currentQuest: "Begin your cultural journey",
     gameTime: 0,
     isPlaying: false,
-    isPaused: false
+    isPaused: false,
+    health: 100,
+    energy: 100,
+    combo: 0,
+    enemiesDefeated: 0
   });
 
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+  const [currentChallenge, setCurrentChallenge] = useState<ActionChallenge | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
-  const [gamePhase, setGamePhase] = useState<'menu' | 'playing' | 'quiz' | 'story' | 'completed'>('menu');
+  const [gamePhase, setGamePhase] = useState<'menu' | 'playing' | 'quiz' | 'action' | 'story' | 'completed'>('menu');
   const [storyText, setStoryText] = useState('');
+  const [challengeProgress, setChallengeProgress] = useState(0);
+  const [challengeActive, setChallengeActive] = useState(false);
 
+  const isActionGame = gameData.genre.toLowerCase().includes('action');
   const [questions] = useState(() => createQuestionDatabase(gameData.theme.toLowerCase()));
+  const [actionChallenges] = useState(() => createActionChallenges(gameData.theme.toLowerCase()));
 
-  // Enhanced story progression for all themes
   const getStoryProgression = useCallback((level: number) => {
     const themeKey = gameData.theme.toLowerCase();
     
@@ -256,7 +347,6 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     return storyArray[level - 1] || "Your cultural journey continues...";
   }, [gameData.theme]);
 
-  // Game timer
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (gameState.isPlaying && !gameState.isPaused) {
@@ -267,19 +357,16 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     return () => clearInterval(interval);
   }, [gameState.isPlaying, gameState.isPaused]);
 
-  // Start game
   const startGame = () => {
     setGameState(prev => ({ ...prev, isPlaying: true }));
     setGamePhase('story');
     setStoryText(getStoryProgression(1));
   };
 
-  // Pause/Resume game
   const togglePause = () => {
     setGameState(prev => ({ ...prev, isPaused: !prev.isPaused }));
   };
 
-  // Reset game
   const resetGame = () => {
     setGameState({
       currentLevel: 1,
@@ -291,15 +378,21 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
       currentQuest: "Begin your cultural journey",
       gameTime: 0,
       isPlaying: false,
-      isPaused: false
+      isPaused: false,
+      health: 100,
+      energy: 100,
+      combo: 0,
+      enemiesDefeated: 0
     });
     setGamePhase('menu');
     setCurrentQuestion(null);
     setSelectedAnswer(null);
     setShowResult(false);
+    setCurrentChallenge(null);
+    setChallengeProgress(0);
+    setChallengeActive(false);
   };
 
-  // Updated startQuiz to use theme-specific questions
   const startQuiz = () => {
     const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
     setCurrentQuestion(randomQuestion);
@@ -308,7 +401,91 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     setShowResult(false);
   };
 
-  // Handle answer selection
+  const startActionChallenge = () => {
+    const randomChallenge = actionChallenges[Math.floor(Math.random() * actionChallenges.length)];
+    setCurrentChallenge(randomChallenge);
+    setGamePhase('action');
+    setChallengeProgress(0);
+    setChallengeActive(true);
+    
+    setTimeout(() => {
+      if (challengeActive) {
+        completeChallengeWithResult(challengeProgress >= (randomChallenge.targets || 5));
+      }
+    }, randomChallenge.timeLimit * 1000);
+  };
+
+  const handleChallengeAction = () => {
+    if (!currentChallenge || !challengeActive) return;
+    
+    setChallengeProgress(prev => prev + 1);
+    
+    if (isActionGame) {
+      setGameState(prev => ({ 
+        ...prev, 
+        combo: prev.combo ? prev.combo + 1 : 1,
+        enemiesDefeated: prev.enemiesDefeated ? prev.enemiesDefeated + 1 : 1
+      }));
+    }
+    
+    if (challengeProgress + 1 >= (currentChallenge.targets || 5)) {
+      completeChallengeWithResult(true);
+    }
+  };
+
+  const completeChallengeWithResult = (success: boolean) => {
+    setChallengeActive(false);
+    setShowResult(true);
+    
+    if (success) {
+      const points = currentChallenge ? 
+        (currentChallenge.difficulty === 'hard' ? 300 : 
+         currentChallenge.difficulty === 'medium' ? 200 : 100) : 100;
+      
+      setGameState(prev => ({
+        ...prev,
+        score: prev.score + points,
+        experience: prev.experience + 75,
+        health: Math.min(100, (prev.health || 100) + 10),
+        energy: Math.min(100, (prev.energy || 100) + 15)
+      }));
+
+      setTimeout(() => {
+        if (gameState.currentLevel < 5) {
+          setGameState(prev => ({ ...prev, currentLevel: prev.currentLevel + 1 }));
+          setGamePhase('story');
+        } else {
+          setGamePhase('completed');
+        }
+      }, 3000);
+    } else {
+      const newLives = gameState.lives - 1;
+      setGameState(prev => ({ 
+        ...prev, 
+        lives: newLives,
+        health: Math.max(0, (prev.health || 100) - 25),
+        combo: 0
+      }));
+      
+      if (newLives <= 0) {
+        setTimeout(() => setGamePhase('completed'), 2000);
+      } else {
+        setTimeout(() => {
+          setGamePhase('story');
+          setStoryText("Your journey continues, but be more careful...");
+        }, 2000);
+      }
+    }
+  };
+
+  const continueToChallenge = () => {
+    if (isActionGame && Math.random() > 0.3) {
+      startActionChallenge();
+    } else {
+      startQuiz();
+    }
+  };
+
   const handleAnswerSubmit = () => {
     if (selectedAnswer === null || !currentQuestion) return;
 
@@ -320,7 +497,6 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
       const newExperience = gameState.experience + 50;
       const newAchievements = [...gameState.achievements];
       
-      // Check for achievements
       if (newScore >= 500 && !newAchievements.includes('Score Master')) {
         newAchievements.push('Score Master');
       }
@@ -336,7 +512,6 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
         inventory: [...prev.inventory, `Sacred Knowledge: ${currentQuestion.category}`]
       }));
 
-      // Level progression
       setTimeout(() => {
         if (gameState.currentLevel < 5) {
           setGameState(prev => ({ ...prev, currentLevel: prev.currentLevel + 1 }));
@@ -363,19 +538,12 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     }
   };
 
-  // Continue from story to quiz
-  const continueToQuiz = () => {
-    startQuiz();
-  };
-
-  // Format time
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Render game menu
   const renderMenu = () => (
     <div className="text-center space-y-6">
       <div className="relative">
@@ -399,7 +567,6 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     </div>
   );
 
-  // Render story phase
   const renderStory = () => (
     <div className="text-center space-y-6">
       <div className="text-6xl mb-4 animate-pulse">📜</div>
@@ -407,7 +574,7 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
         <p className="text-xl text-gray-800 leading-relaxed">{storyText}</p>
       </div>
       <Button 
-        onClick={continueToQuiz}
+        onClick={continueToChallenge}
         size="lg"
         className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
       >
@@ -417,7 +584,6 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     </div>
   );
 
-  // Render quiz phase
   const renderQuiz = () => {
     if (!currentQuestion) return null;
 
@@ -482,7 +648,73 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     );
   };
 
-  // Render completed phase
+  const renderActionChallenge = () => {
+    if (!currentChallenge) return null;
+
+    const progressPercentage = currentChallenge.targets ? 
+      (challengeProgress / currentChallenge.targets) * 100 : 0;
+
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <Badge variant="outline" className="mb-4 bg-red-100 text-red-800">
+            {currentChallenge.type.toUpperCase()} CHALLENGE
+          </Badge>
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">{currentChallenge.description}</h3>
+          <p className="text-lg text-gray-600 mb-6">{currentChallenge.instructions}</p>
+        </div>
+
+        <div className="bg-gradient-to-br from-red-50 to-orange-50 p-6 rounded-lg border-2 border-red-200">
+          <div className="flex justify-between items-center mb-4">
+            <span className="font-semibold">Progress: {challengeProgress}/{currentChallenge.targets}</span>
+            <span className="font-semibold">Time Limit: {currentChallenge.timeLimit}s</span>
+          </div>
+          <Progress value={progressPercentage} className="h-3 mb-4" />
+          
+          {challengeActive && (
+            <div className="text-center">
+              <Button
+                onClick={handleChallengeAction}
+                size="lg"
+                className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold text-xl px-8 py-4"
+              >
+                {currentChallenge.type === 'combat' && <Sword className="w-6 h-6 mr-2" />}
+                {currentChallenge.type === 'dodge' && <Shield className="w-6 h-6 mr-2" />}
+                {currentChallenge.type === 'collect' && <Star className="w-6 h-6 mr-2" />}
+                {currentChallenge.type === 'boss' && <Bomb className="w-6 h-6 mr-2" />}
+                ACTION!
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {showResult && (
+          <div className={`text-center p-6 rounded-lg ${
+            challengeProgress >= (currentChallenge.targets || 5)
+              ? "bg-green-50 border-2 border-green-200" 
+              : "bg-red-50 border-2 border-red-200"
+          }`}>
+            <div className="text-4xl mb-2">
+              {challengeProgress >= (currentChallenge.targets || 5) ? "🏆" : "💔"}
+            </div>
+            <h4 className="text-xl font-bold mb-2">
+              {challengeProgress >= (currentChallenge.targets || 5) ? "Challenge Complete!" : "Challenge Failed!"}
+            </h4>
+            <p className="text-gray-700 mb-2">
+              You {challengeProgress >= (currentChallenge.targets || 5) ? 'successfully completed' : 'failed to complete'} the {currentChallenge.type} challenge!
+            </p>
+            {challengeProgress >= (currentChallenge.targets || 5) && (
+              <p className="text-green-600 font-semibold">
+                +{currentChallenge.difficulty === 'hard' ? 300 : 
+                   currentChallenge.difficulty === 'medium' ? 200 : 100} points!
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderCompleted = () => (
     <div className="text-center space-y-6">
       <div className="text-8xl mb-4 animate-bounce">🏆</div>
@@ -536,6 +768,31 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     </div>
   );
 
+  const renderActionStats = () => {
+    if (!isActionGame) return null;
+    
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+        <div className="flex items-center gap-1 text-sm">
+          <Heart className="w-3 h-3 text-red-500" />
+          <span>{gameState.health}/100</span>
+        </div>
+        <div className="flex items-center gap-1 text-sm">
+          <Zap className="w-3 h-3 text-yellow-500" />
+          <span>{gameState.energy}/100</span>
+        </div>
+        <div className="flex items-center gap-1 text-sm">
+          <Target className="w-3 h-3 text-blue-500" />
+          <span>x{gameState.combo || 0}</span>
+        </div>
+        <div className="flex items-center gap-1 text-sm">
+          <Sword className="w-3 h-3 text-purple-500" />
+          <span>{gameState.enemiesDefeated || 0}</span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Card className="w-full max-w-4xl mx-auto shadow-2xl border-0 bg-gradient-to-br from-purple-50 to-pink-50">
       <CardHeader className="pb-4">
@@ -543,6 +800,7 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
           <CardTitle className="flex items-center gap-2 text-2xl">
             <Gamepad2 className="w-8 h-8 text-purple-600" />
             {gameData.title}
+            {isActionGame && <span className="text-lg">⚔️</span>}
           </CardTitle>
           <div className="flex gap-2">
             {gameState.isPlaying && (
@@ -561,28 +819,31 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
         </div>
         
         {gameState.isPlaying && (
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4">
-            <div className="flex items-center gap-2">
-              <Star className="w-4 h-4 text-yellow-500" />
-              <span className="font-semibold">{gameState.score}</span>
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4">
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-yellow-500" />
+                <span className="font-semibold">{gameState.score}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Heart className="w-4 h-4 text-red-500" />
+                <span className="font-semibold">{gameState.lives}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Crown className="w-4 h-4 text-purple-500" />
+                <span className="font-semibold">Level {gameState.currentLevel}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-blue-500" />
+                <span className="font-semibold">{gameState.experience} XP</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Trophy className="w-4 h-4 text-green-500" />
+                <span className="font-semibold">{formatTime(gameState.gameTime)}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-red-500" />
-              <span className="font-semibold">{gameState.lives}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Crown className="w-4 h-4 text-purple-500" />
-              <span className="font-semibold">Level {gameState.currentLevel}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-blue-500" />
-              <span className="font-semibold">{gameState.experience} XP</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-green-500" />
-              <span className="font-semibold">{formatTime(gameState.gameTime)}</span>
-            </div>
-          </div>
+            {renderActionStats()}
+          </>
         )}
         
         {gameState.isPlaying && gameState.currentLevel <= 5 && (
@@ -600,6 +861,7 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
         {gamePhase === 'menu' && renderMenu()}
         {gamePhase === 'story' && renderStory()}
         {gamePhase === 'quiz' && renderQuiz()}
+        {gamePhase === 'action' && renderActionChallenge()}
         {gamePhase === 'completed' && renderCompleted()}
         
         {gameState.isPaused && gameState.isPlaying && (

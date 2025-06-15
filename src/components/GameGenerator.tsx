@@ -20,7 +20,7 @@ const GameGenerator = () => {
 
   const genres = [
     'Adventure', 'Puzzle', 'Strategy', 'Educational', 'RPG', 
-    'Action', 'Simulation', 'Card Game', 'Board Game', 'Quiz'
+    'Action', 'Action-Adventure', 'Action-RPG', 'Simulation', 'Card Game', 'Board Game', 'Quiz'
   ];
 
   const themes = [
@@ -40,8 +40,32 @@ const GameGenerator = () => {
     'Art - Madhubani', 'Art - Warli', 'Art - Tanjore Painting'
   ];
 
-  // Pre-built games that users can instantly play
+  // Pre-built games including action games
   const preBuiltGames = [
+    {
+      title: "Hanuman's Battle",
+      genre: "action",
+      theme: "mythology - ramayana",
+      description: "Fast-paced action game where you play as Hanuman fighting demons to save Sita.",
+      mechanics: ['Real-time Combat', 'Power-ups', 'Enemy Waves', 'Boss Battles'],
+      features: ['Combo System', 'Special Abilities', 'Multiple Levels', 'Achievement System']
+    },
+    {
+      title: "Arjuna's Arrow Rush",
+      genre: "action",
+      theme: "mythology - mahabharata",
+      description: "Action-packed archery game where you must hit moving targets in the Kurukshetra battlefield.",
+      mechanics: ['Precision Shooting', 'Moving Targets', 'Time Pressure', 'Weapon Upgrades'],
+      features: ['Slow Motion', 'Multiplier System', 'Boss Encounters', 'Skill Progression']
+    },
+    {
+      title: "Temple Run Defender",
+      genre: "action",
+      theme: "architecture - temples",
+      description: "Defend ancient temples from invaders using mystical powers and strategic combat.",
+      mechanics: ['Tower Defense', 'Resource Management', 'Wave Defense', 'Special Powers'],
+      features: ['Multiple Towers', 'Upgrade System', 'Spell Casting', 'Epic Boss Fights']
+    },
     {
       title: "Ramayana Quest",
       genre: "adventure",
@@ -65,30 +89,6 @@ const GameGenerator = () => {
       description: "Plan and organize traditional Indian festivals, learn customs, and spread joy in the community.",
       mechanics: ['Event Planning', 'Resource Management', 'Community Building', 'Cultural Learning'],
       features: ['Regional Variations', 'Recipe Collection', 'Decoration Crafting', 'Social Sharing']
-    },
-    {
-      title: "Classical Dance Academy",
-      genre: "educational",
-      theme: "culture - classical dance",
-      description: "Learn and master traditional Indian dance forms through interactive gameplay and cultural education.",
-      mechanics: ['Rhythm Matching', 'Pose Recognition', 'Story Interpretation', 'Performance Scoring'],
-      features: ['Multiple Dance Forms', 'Cultural Context', 'Progressive Learning', 'Performance Mode']
-    },
-    {
-      title: "Spice Route Trader",
-      genre: "strategy",
-      theme: "cuisine - spices & herbs",
-      description: "Navigate ancient trade routes, discover exotic spices, and build your trading empire across India.",
-      mechanics: ['Trade Management', 'Route Planning', 'Market Analysis', 'Cultural Exchange'],
-      features: ['Historical Accuracy', 'Recipe Discovery', 'Economic Strategy', 'Cultural Learning']
-    },
-    {
-      title: "Temple Architecture Builder",
-      genre: "simulation",
-      theme: "architecture - temples",
-      description: "Design and construct magnificent Indian temples while learning about architectural principles and cultural significance.",
-      mechanics: ['Building Design', 'Resource Management', 'Historical Accuracy', 'Cultural Integration'],
-      features: ['Authentic Styles', 'Educational Content', 'Visual Showcase', 'Historical Context']
     }
   ];
 
@@ -104,37 +104,57 @@ const GameGenerator = () => {
 
     setIsGenerating(true);
     
-    // Simulate AI generation
+    // Enhanced generation for action games
     setTimeout(() => {
+      const isActionGame = gameGenre.toLowerCase().includes('action');
+      
+      const baseMechanics = isActionGame ? [
+        'Real-time Combat',
+        'Health & Energy System',
+        'Power-ups Collection',
+        'Enemy Encounters',
+        'Level Progression'
+      ] : [
+        'Turn-based gameplay',
+        'Story-driven progression',
+        'Cultural quiz elements',
+        'Achievement system',
+        'Multiplayer support'
+      ];
+
+      const baseFeatures = isActionGame ? [
+        'Combo System',
+        'Special Abilities',
+        'Boss Battles',
+        'Weapon Upgrades',
+        'Leaderboard'
+      ] : [
+        'Voice narration in selected language',
+        'Authentic cultural graphics',
+        'Educational content integration',
+        'Leaderboard system',
+        'Offline play support'
+      ];
+
       const mockGame = {
         title: gameTitle,
         genre: gameGenre,
         theme: gameTheme,
         description: gameDescription || `An immersive ${gameGenre} game exploring ${gameTheme}`,
-        mechanics: [
-          'Turn-based gameplay',
-          'Story-driven progression',
-          'Cultural quiz elements',
-          'Achievement system',
-          'Multiplayer support'
-        ],
-        features: [
-          'Voice narration in selected language',
-          'Authentic cultural graphics',
-          'Educational content integration',
-          'Leaderboard system',
-          'Offline play support'
-        ],
-        codeSnippet: `// Generated Game Structure
+        mechanics: baseMechanics,
+        features: baseFeatures,
+        codeSnippet: `// Generated ${gameGenre} Game
 const ${gameTitle.replace(/\s+/g, '')}Game = {
   title: "${gameTitle}",
   genre: "${gameGenre}",
   theme: "${gameTheme}",
-  language: "hindi", // Selected language
+  language: "hindi",
+  gameType: "${isActionGame ? 'action' : 'traditional'}",
   mechanics: [
-    "turnBasedGameplay",
-    "storyProgression",
-    "quizElements"
+    ${baseMechanics.map(m => `"${m.toLowerCase().replace(/\s+/g, '')}"`).join(',\n    ')}
+  ],
+  features: [
+    ${baseFeatures.map(f => `"${f.toLowerCase().replace(/\s+/g, '')}"`).join(',\n    ')}
   ],
   assets: {
     graphics: "cultural_authentic",
@@ -150,28 +170,32 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
       
       toast({
         title: "Game Generated Successfully!",
-        description: "Your Indic game is ready to play and download",
+        description: `Your ${gameGenre} game is ready to play and download`,
       });
     }, 3000);
   };
 
   const playPreBuiltGame = (game) => {
+    const isActionGame = game.genre.toLowerCase().includes('action');
+    
     setGeneratedGame({
       ...game,
-      codeSnippet: `// Pre-built Game: ${game.title}
+      codeSnippet: `// Pre-built ${game.genre} Game: ${game.title}
 const ${game.title.replace(/\s+/g, '')}Game = {
   title: "${game.title}",
   genre: "${game.genre}",
   theme: "${game.theme}",
+  gameType: "${isActionGame ? 'action' : 'traditional'}",
   preBuilt: true,
-  fullyFunctional: true
+  fullyFunctional: true,
+  actionMechanics: ${isActionGame ? 'true' : 'false'}
 };`,
       downloadUrl: '#'
     });
     
     toast({
       title: `${game.title} Loaded!`,
-      description: "Pre-built game ready to play",
+      description: `${game.genre} game ready to play`,
     });
   };
 
@@ -187,13 +211,13 @@ const ${game.title.replace(/\s+/g, '')}Game = {
           </div>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Generate Your Game</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Use our AI-powered generator to create culturally rich games in minutes
+            Use our AI-powered generator to create culturally rich games including action-packed adventures
           </p>
         </div>
 
         {/* Pre-built Games Section */}
         <div className="mb-12">
-          <h3 className="text-2xl font-bold text-center mb-8 text-purple-800">🎮 Ready-to-Play Games</h3>
+          <h3 className="text-2xl font-bold text-center mb-8 text-purple-800">Ready-to-Play Games</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {preBuiltGames.map((game, index) => (
               <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white to-purple-50">
@@ -203,12 +227,22 @@ const ${game.title.replace(/\s+/g, '')}Game = {
                 <CardContent>
                   <p className="text-sm text-gray-600 mb-3">{game.description}</p>
                   <div className="flex flex-wrap gap-1 mb-4">
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{game.genre}</span>
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      game.genre.toLowerCase().includes('action') 
+                        ? 'bg-red-100 text-red-800' 
+                        : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {game.genre}
+                    </span>
                     <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{game.theme}</span>
                   </div>
                   <Button 
                     onClick={() => playPreBuiltGame(game)}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    className={`w-full ${
+                      game.genre.toLowerCase().includes('action')
+                        ? 'bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700'
+                        : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
+                    }`}
                     size="sm"
                   >
                     <Play className="w-4 h-4 mr-2" />
@@ -235,7 +269,7 @@ const ${game.title.replace(/\s+/g, '')}Game = {
                   Game Title *
                 </label>
                 <Input
-                  placeholder="e.g., Arjuna's Quest"
+                  placeholder="e.g., Hanuman's Adventure, Arjuna's Quest"
                   value={gameTitle}
                   onChange={(e) => setGameTitle(e.target.value)}
                   className="border-2 border-purple-200 focus:border-purple-500"
@@ -253,7 +287,7 @@ const ${game.title.replace(/\s+/g, '')}Game = {
                   <SelectContent>
                     {genres.map((genre) => (
                       <SelectItem key={genre} value={genre.toLowerCase()}>
-                        {genre}
+                        {genre} {genre.toLowerCase().includes('action') && '⚔️'}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -288,6 +322,11 @@ const ${game.title.replace(/\s+/g, '')}Game = {
                   onChange={(e) => setGameDescription(e.target.value)}
                   className="border-2 border-purple-200 focus:border-purple-500 min-h-[100px]"
                 />
+                {gameGenre.toLowerCase().includes('action') && (
+                  <p className="text-sm text-orange-600 mt-2">
+                    ⚔️ Action game selected! Your game will include combat mechanics, power-ups, and real-time gameplay.
+                  </p>
+                )}
               </div>
 
               <Button
@@ -324,6 +363,7 @@ const ${game.title.replace(/\s+/g, '')}Game = {
                     </div>
                     <h3 className="text-xl font-semibold">Your Generated Game Will Appear Here</h3>
                     <p className="text-gray-500 mt-2">Choose from ready-to-play games above or create your custom game</p>
+                    <p className="text-gray-500 mt-1 text-sm">Try selecting "Action" genre for combat-based games!</p>
                   </div>
                 </CardContent>
               </Card>
