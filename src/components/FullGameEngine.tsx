@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -54,6 +53,134 @@ interface FullGameEngineProps {
   onClose: () => void;
 }
 
+// Expanded question database for all themes
+const createQuestionDatabase = (theme: string) => {
+  const questionSets = {
+    'mythology - ramayana': [
+      {
+        id: 1,
+        question: "Who was Rama's devoted brother who accompanied him in exile?",
+        options: ["Bharata", "Lakshmana", "Shatrughna", "Hanuman"],
+        correctAnswer: 1,
+        points: 100,
+        category: "Characters",
+        explanation: "Lakshmana was Rama's devoted younger brother who accompanied him during his 14-year exile."
+      },
+      {
+        id: 2,
+        question: "What form did Ravana take to trick Sita?",
+        options: ["Golden deer", "Sage", "Monkey", "Bird"],
+        correctAnswer: 0,
+        points: 120,
+        category: "Story",
+        explanation: "Ravana disguised himself as a golden deer to lure Rama away from Sita."
+      },
+      {
+        id: 3,
+        question: "Who built the bridge to Lanka?",
+        options: ["Demons", "Vanaras", "Gods", "Humans"],
+        correctAnswer: 1,
+        points: 150,
+        category: "Events",
+        explanation: "The Vanaras (monkey army) built the bridge to Lanka under Nala and Nila's supervision."
+      }
+    ],
+    'mythology - mahabharata': [
+      {
+        id: 1,
+        question: "Who delivered the Bhagavad Gita?",
+        options: ["Arjuna", "Krishna", "Vyasa", "Bhishma"],
+        correctAnswer: 1,
+        points: 100,
+        category: "Wisdom",
+        explanation: "Lord Krishna delivered the Bhagavad Gita to Arjuna on the battlefield of Kurukshetra."
+      },
+      {
+        id: 2,
+        question: "How many days did the Kurukshetra war last?",
+        options: ["10 days", "18 days", "21 days", "30 days"],
+        correctAnswer: 1,
+        points: 120,
+        category: "History",
+        explanation: "The great war of Kurukshetra lasted for 18 days."
+      },
+      {
+        id: 3,
+        question: "Who was known as the greatest archer?",
+        options: ["Bhishma", "Drona", "Arjuna", "Karna"],
+        correctAnswer: 2,
+        points: 150,
+        category: "Warriors",
+        explanation: "Arjuna was considered the greatest archer, though Karna was equally skilled."
+      }
+    ],
+    'festival - diwali': [
+      {
+        id: 1,
+        question: "Diwali celebrates the return of which deity?",
+        options: ["Krishna", "Rama", "Shiva", "Ganesha"],
+        correctAnswer: 1,
+        points: 100,
+        category: "Celebration",
+        explanation: "Diwali celebrates the return of Lord Rama to Ayodhya after 14 years of exile."
+      },
+      {
+        id: 2,
+        question: "What are the small oil lamps called?",
+        options: ["Diyas", "Kandils", "Torches", "Lanterns"],
+        correctAnswer: 0,
+        points: 80,
+        category: "Traditions",
+        explanation: "Diyas are small oil lamps lit during Diwali to symbolize the victory of light over darkness."
+      }
+    ],
+    'culture - classical dance': [
+      {
+        id: 1,
+        question: "Which dance form originated in Tamil Nadu?",
+        options: ["Kathak", "Bharatanatyam", "Odissi", "Manipuri"],
+        correctAnswer: 1,
+        points: 100,
+        category: "Regional Arts",
+        explanation: "Bharatanatyam is the classical dance form that originated in Tamil Nadu."
+      },
+      {
+        id: 2,
+        question: "Kathak dance originated in which region?",
+        options: ["South India", "East India", "North India", "West India"],
+        correctAnswer: 2,
+        points: 120,
+        category: "Regional Arts",
+        explanation: "Kathak is a classical dance form that originated in North India."
+      }
+    ],
+    'architecture - temples': [
+      {
+        id: 1,
+        question: "Which temple is famous for its Sun Chariot architecture?",
+        options: ["Konark", "Khajuraho", "Hampi", "Madurai"],
+        correctAnswer: 0,
+        points: 150,
+        category: "Architecture",
+        explanation: "The Konark Sun Temple in Odisha is famous for its chariot-shaped architecture."
+      }
+    ],
+    'cuisine - spices & herbs': [
+      {
+        id: 1,
+        question: "Which spice is known as the 'Golden Spice'?",
+        options: ["Saffron", "Turmeric", "Cardamom", "Cinnamon"],
+        correctAnswer: 1,
+        points: 100,
+        category: "Spices",
+        explanation: "Turmeric is known as the 'Golden Spice' due to its color and health benefits."
+      }
+    ]
+  };
+
+  return questionSets[theme] || questionSets['mythology - ramayana'];
+};
+
 const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) => {
   const [gameState, setGameState] = useState<GameState>({
     currentLevel: 1,
@@ -74,57 +201,12 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
   const [gamePhase, setGamePhase] = useState<'menu' | 'playing' | 'quiz' | 'story' | 'completed'>('menu');
   const [storyText, setStoryText] = useState('');
 
-  // Cultural questions database
-  const questions: Question[] = [
-    {
-      id: 1,
-      question: "In the Ramayana, who is the devoted brother of Lord Rama?",
-      options: ["Bharata", "Lakshmana", "Shatrughna", "Hanuman"],
-      correctAnswer: 1,
-      points: 100,
-      category: "Mythology",
-      explanation: "Lakshmana was Rama's devoted younger brother who accompanied him during his 14-year exile."
-    },
-    {
-      id: 2,
-      question: "Which festival is known as the 'Festival of Lights'?",
-      options: ["Holi", "Diwali", "Dussehra", "Karva Chauth"],
-      correctAnswer: 1,
-      points: 75,
-      category: "Festivals",
-      explanation: "Diwali symbolizes the victory of light over darkness and good over evil."
-    },
-    {
-      id: 3,
-      question: "Who was the founder of the Maurya Empire?",
-      options: ["Ashoka", "Chandragupta Maurya", "Bindusara", "Bimbisara"],
-      correctAnswer: 1,
-      points: 150,
-      category: "History",
-      explanation: "Chandragupta Maurya founded the Maurya Empire around 321 BCE."
-    },
-    {
-      id: 4,
-      question: "Which classical dance form originated in Tamil Nadu?",
-      options: ["Kathak", "Bharatanatyam", "Odissi", "Manipuri"],
-      correctAnswer: 1,
-      points: 125,
-      category: "Culture",
-      explanation: "Bharatanatyam is one of the oldest classical dance forms, originating in Tamil Nadu."
-    },
-    {
-      id: 5,
-      question: "What is the sacred river mentioned in many Hindu scriptures?",
-      options: ["Yamuna", "Ganga", "Saraswati", "Narmada"],
-      correctAnswer: 1,
-      points: 100,
-      category: "Geography",
-      explanation: "The Ganga (Ganges) is considered the most sacred river in Hinduism."
-    }
-  ];
+  const [questions] = useState(() => createQuestionDatabase(gameData.theme.toLowerCase()));
 
-  // Story progression based on theme
+  // Enhanced story progression for all themes
   const getStoryProgression = useCallback((level: number) => {
+    const themeKey = gameData.theme.toLowerCase();
+    
     const stories = {
       'mythology - ramayana': [
         "🏹 Welcome to Ayodhya! Prince Rama has been chosen to inherit the throne, but fate has other plans...",
@@ -146,11 +228,31 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
         "🍬 Sweet exchanges and gift-giving spread joy throughout the community.",
         "🏠 Homes are decorated with rangoli and diyas, welcoming prosperity.",
         "✨ The festival concludes with prayers for happiness and success in the coming year."
+      ],
+      'culture - classical dance': [
+        "💃 Welcome to the dance academy! Learn the ancient art of storytelling through movement.",
+        "🎭 Master the basic positions and hand gestures that convey deep emotions and stories.",
+        "🎵 Feel the rhythm! Synchronize your movements with traditional music and beats.",
+        "🌟 Performance time! Showcase your skills in front of an appreciative audience.",
+        "🏆 Become a master! You have learned the sacred art of classical dance."
+      ],
+      'architecture - temples': [
+        "🏛️ Begin your architectural journey! Learn about the sacred geometry of temple design.",
+        "🔨 Gather materials and craftsmen to build your magnificent temple structure.",
+        "🎨 Add intricate carvings and sculptures that tell stories of gods and legends.",
+        "🕉️ Consecrate your temple! The divine presence blesses your architectural masterpiece.",
+        "👥 Welcome devotees! Your temple becomes a center of spiritual and cultural activity."
+      ],
+      'cuisine - spices & herbs': [
+        "🌶️ Welcome to the spice market! Discover the aromatic world of Indian spices.",
+        "🚢 Join the spice trade routes that connected India to the world.",
+        "👨‍🍳 Learn traditional recipes passed down through generations.",
+        "🍽️ Create a feast! Combine spices to make delicious and healthy dishes.",
+        "🏪 Establish your spice empire! Become a renowned spice merchant."
       ]
     };
     
-    const themeKey = gameData.theme.toLowerCase();
-    const storyArray = stories[themeKey as keyof typeof stories] || stories['mythology - ramayana'];
+    const storyArray = stories[themeKey] || stories['mythology - ramayana'];
     return storyArray[level - 1] || "Your cultural journey continues...";
   }, [gameData.theme]);
 
@@ -197,7 +299,7 @@ const FullGameEngine: React.FC<FullGameEngineProps> = ({ gameData, onClose }) =>
     setShowResult(false);
   };
 
-  // Start quiz phase
+  // Updated startQuiz to use theme-specific questions
   const startQuiz = () => {
     const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
     setCurrentQuestion(randomQuestion);
