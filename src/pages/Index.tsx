@@ -3,6 +3,7 @@ import React from 'react';
 import Hero from '@/components/Hero';
 import GameGenerator from '@/components/GameGenerator';
 import LanguageSelector from '@/components/LanguageSelector';
+import LanguageConverter from '@/components/LanguageConverter';
 import ApiDocs from '@/components/ApiDocs';
 import FeaturedGames from '@/components/FeaturedGames';
 import Footer from '@/components/Footer';
@@ -12,6 +13,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-green-50">
       <Hero />
       <LanguageSelector />
+      <LanguageConverter />
       <GameGenerator />
       <FeaturedGames />
       <ApiDocs />
