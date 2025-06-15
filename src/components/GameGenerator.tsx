@@ -89,6 +89,46 @@ const GameGenerator = () => {
       description: "Design and construct magnificent Indian temples while learning about architectural principles and cultural significance.",
       mechanics: ['Building Design', 'Resource Management', 'Historical Accuracy', 'Cultural Integration'],
       features: ['Authentic Styles', 'Educational Content', 'Visual Showcase', 'Historical Context']
+    },
+    {
+      title: "Warrior's Path: Arjuna",
+      genre: "action",
+      theme: "mythology - mahabharata",
+      description: "Master archery skills as Arjuna in fast-paced action sequences. Defend dharma through precise combat.",
+      mechanics: ['Real-time Combat', 'Archery System', 'Combo Attacks', 'Enemy Waves'],
+      features: ['Fast-paced Action', 'Skill Progression', 'Epic Boss Battles', 'Mythological Weapons']
+    },
+    {
+      title: "Hanuman's Flight",
+      genre: "action",
+      theme: "mythology - hanuman chalisa",
+      description: "Soar through the skies as Hanuman, collecting sacred items and battling demons in aerial combat.",
+      mechanics: ['Flying Mechanics', 'Aerial Combat', 'Item Collection', 'Power-ups'],
+      features: ['Flight Controls', 'Divine Powers', 'Obstacle Courses', 'Time Challenges']
+    },
+    {
+      title: "Kalaripayattu Master",
+      genre: "action",
+      theme: "culture - martial arts",
+      description: "Learn and master the ancient martial art of Kalaripayattu through intense training and combat challenges.",
+      mechanics: ['Combo System', 'Weapon Mastery', 'Training Modes', 'Tournament Battles'],
+      features: ['Authentic Techniques', 'Progressive Difficulty', 'Master Classes', 'Cultural History']
+    },
+    {
+      title: "Durga's Conquest",
+      genre: "action",
+      theme: "mythology - goddess durga",
+      description: "Channel the power of Goddess Durga to defeat evil forces in epic battle sequences.",
+      mechanics: ['Multi-weapon Combat', 'Divine Powers', 'Boss Battles', 'Transformation System'],
+      features: ['Multiple Weapons', 'Special Abilities', 'Epic Storyline', 'Visual Effects']
+    },
+    {
+      title: "Shiva's Dance Warrior",
+      genre: "action",
+      theme: "mythology - shiva purana",
+      description: "Perform the cosmic dance of destruction and creation while battling cosmic forces.",
+      mechanics: ['Rhythm-based Combat', 'Dance Combinations', 'Elemental Powers', 'Cosmic Battles'],
+      features: ['Unique Combat Style', 'Cosmic Powers', 'Rhythm Gameplay', 'Spiritual Journey']
     }
   ];
 
@@ -203,16 +243,30 @@ const ${game.title.replace(/\s+/g, '')}Game = {
                 <CardContent>
                   <p className="text-sm text-gray-600 mb-3">{game.description}</p>
                   <div className="flex flex-wrap gap-1 mb-4">
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{game.genre}</span>
-                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{game.theme}</span>
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      game.genre === 'action' 
+                        ? 'bg-red-100 text-red-800' 
+                        : game.genre === 'strategy'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-green-100 text-green-800'
+                    }`}>
+                      {game.genre}
+                    </span>
+                    <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">
+                      {game.theme.split(' - ')[0]}
+                    </span>
                   </div>
                   <Button 
                     onClick={() => playPreBuiltGame(game)}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    className={`w-full ${
+                      game.genre === 'action'
+                        ? 'bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700'
+                        : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
+                    }`}
                     size="sm"
                   >
                     <Play className="w-4 h-4 mr-2" />
-                    Play Now
+                    {game.genre === 'action' ? 'Battle Now' : 'Play Now'}
                   </Button>
                 </CardContent>
               </Card>
