@@ -3,6 +3,7 @@ import React from 'react';
 import Hero from '@/components/Hero';
 import GameGenerator from '@/components/GameGenerator';
 import LanguageSelector from '@/components/LanguageSelector';
+import GameNameGenerator from '@/components/GameNameGenerator';
 import ApiDocs from '@/components/ApiDocs';
 import FeaturedGames from '@/components/FeaturedGames';
 import Footer from '@/components/Footer';
@@ -13,6 +14,7 @@ const Index = () => {
       <Hero />
       <LanguageSelector />
       <GameGenerator />
+      <GameNameGenerator />
       <FeaturedGames />
       <ApiDocs />
       <Footer />
