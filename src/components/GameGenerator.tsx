@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Wand2, Sparkles, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translateText, translateGameContent } from '@/utils/languageTranslation';
 import GamePreview from './GamePreview';
 
 const GameGenerator = () => {
@@ -17,6 +18,7 @@ const GameGenerator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedGame, setGeneratedGame] = useState(null);
   const { toast } = useToast();
+  const { selectedLanguage } = useLanguage();
 
   const genres = [
     'Adventure', 'Puzzle', 'Strategy', 'Educational', 'RPG', 
@@ -40,7 +42,7 @@ const GameGenerator = () => {
     'Art - Madhubani', 'Art - Warli', 'Art - Tanjore Painting'
   ];
 
-  // Pre-built games that users can instantly play
+  // Pre-built games that users can instantly play - these will be translated based on selected language
   const preBuiltGames = [
     {
       title: "Ramayana Quest",
@@ -132,6 +134,9 @@ const GameGenerator = () => {
     }
   ];
 
+  // Translate pre-built games based on selected language
+  const translatedPreBuiltGames = preBuiltGames.map(game => translateGameContent(game, selectedLanguage));
+
   const handleGenerate = async () => {
     if (!gameTitle || !gameGenre || !gameTheme) {
       toast({
@@ -170,7 +175,7 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
   title: "${gameTitle}",
   genre: "${gameGenre}",
   theme: "${gameTheme}",
-  language: "hindi", // Selected language
+  language: "${selectedLanguage}",
   mechanics: [
     "turnBasedGameplay",
     "storyProgression",
@@ -185,7 +190,9 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
         downloadUrl: '#'
       };
       
-      setGeneratedGame(mockGame);
+      // Translate the generated game
+      const translatedGame = translateGameContent(mockGame, selectedLanguage);
+      setGeneratedGame(translatedGame);
       setIsGenerating(false);
       
       toast({
@@ -196,13 +203,15 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
   };
 
   const playPreBuiltGame = (game) => {
+    const translatedGame = translateGameContent(game, selectedLanguage);
     setGeneratedGame({
-      ...game,
-      codeSnippet: `// Pre-built Game: ${game.title}
-const ${game.title.replace(/\s+/g, '')}Game = {
-  title: "${game.title}",
-  genre: "${game.genre}",
-  theme: "${game.theme}",
+      ...translatedGame,
+      codeSnippet: `// Pre-built Game: ${translatedGame.title}
+const ${translatedGame.title.replace(/\s+/g, '')}Game = {
+  title: "${translatedGame.title}",
+  genre: "${translatedGame.genre}",
+  theme: "${translatedGame.theme}",
+  language: "${selectedLanguage}",
   preBuilt: true,
   fullyFunctional: true
 };`,
@@ -210,7 +219,7 @@ const ${game.title.replace(/\s+/g, '')}Game = {
     });
     
     toast({
-      title: `${game.title} Loaded!`,
+      title: `${translatedGame.title} Loaded!`,
       description: "Pre-built game ready to play",
     });
   };
@@ -225,7 +234,7 @@ const ${game.title.replace(/\s+/g, '')}Game = {
               <div className="absolute -top-2 -right-2 w-4 h-4 bg-yellow-400 rounded-full animate-ping"></div>
             </div>
           </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Generate Your Game</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">{translateText('Generate Your Game', selectedLanguage)}</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Use our AI-powered generator to create culturally rich games in minutes
           </p>
@@ -235,7 +244,7 @@ const ${game.title.replace(/\s+/g, '')}Game = {
         <div className="mb-12">
           <h3 className="text-2xl font-bold text-center mb-8 text-purple-800">🎮 Ready-to-Play Games</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {preBuiltGames.map((game, index) => (
+            {translatedPreBuiltGames.map((game, index) => (
               <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white to-purple-50">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg text-purple-800">{game.title}</CardTitle>
@@ -244,9 +253,9 @@ const ${game.title.replace(/\s+/g, '')}Game = {
                   <p className="text-sm text-gray-600 mb-3">{game.description}</p>
                   <div className="flex flex-wrap gap-1 mb-4">
                     <span className={`text-xs px-2 py-1 rounded ${
-                      game.genre === 'action' 
+                      game.genre === 'action' || translateText('action', selectedLanguage) === game.genre
                         ? 'bg-red-100 text-red-800' 
-                        : game.genre === 'strategy'
+                        : game.genre === 'strategy' || translateText('strategy', selectedLanguage) === game.genre
                         ? 'bg-blue-100 text-blue-800'
                         : 'bg-green-100 text-green-800'
                     }`}>
@@ -257,16 +266,18 @@ const ${game.title.replace(/\s+/g, '')}Game = {
                     </span>
                   </div>
                   <Button 
-                    onClick={() => playPreBuiltGame(game)}
+                    onClick={() => playPreBuiltGame(preBuiltGames[index])}
                     className={`w-full ${
-                      game.genre === 'action'
+                      game.genre === 'action' || translateText('action', selectedLanguage) === game.genre
                         ? 'bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700'
                         : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
                     }`}
                     size="sm"
                   >
                     <Play className="w-4 h-4 mr-2" />
-                    {game.genre === 'action' ? 'Battle Now' : 'Play Now'}
+                    {game.genre === 'action' || translateText('action', selectedLanguage) === game.genre
+                      ? translateText('Battle Now', selectedLanguage)
+                      : translateText('Play Now', selectedLanguage)}
                   </Button>
                 </CardContent>
               </Card>
@@ -357,7 +368,7 @@ const ${game.title.replace(/\s+/g, '')}Game = {
                 ) : (
                   <div className="flex items-center gap-2">
                     <Wand2 className="w-5 h-5" />
-                    Generate Custom Game
+                    {translateText('Generate Game', selectedLanguage)}
                   </div>
                 )}
               </Button>

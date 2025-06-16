@@ -4,8 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Play, Download, Star } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translateText, translateGameContent } from '@/utils/languageTranslation';
 
 const FeaturedGames = () => {
+  const { selectedLanguage } = useLanguage();
+  
   const featuredGames = [
     {
       title: "Rama's Journey",
@@ -69,6 +73,9 @@ const FeaturedGames = () => {
     }
   ];
 
+  // Translate featured games based on selected language
+  const translatedFeaturedGames = featuredGames.map(game => translateGameContent(game, selectedLanguage));
+
   return (
     <section className="py-16 bg-gradient-to-br from-indigo-50 to-purple-50">
       <div className="container mx-auto px-4">
@@ -80,7 +87,7 @@ const FeaturedGames = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {featuredGames.map((game, index) => (
+          {translatedFeaturedGames.map((game, index) => (
             <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-white group hover:scale-105">
               <CardHeader className="pb-4">
                 <div className="text-center">
@@ -89,7 +96,7 @@ const FeaturedGames = () => {
                   </div>
                   <CardTitle className="text-xl text-gray-800 mb-2">{game.title}</CardTitle>
                   <div className="flex justify-center gap-2 mb-3">
-                    <Badge variant="secondary">{game.genre}</Badge>
+                    <Badge variant="secondary">{translateText(game.genre.toLowerCase(), selectedLanguage)}</Badge>
                     <Badge variant="outline">{game.language}</Badge>
                   </div>
                   <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
@@ -111,7 +118,7 @@ const FeaturedGames = () => {
                 <div className="flex gap-2">
                   <Button className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
                     <Play className="w-4 h-4 mr-2" />
-                    Play
+                    {translateText('Play Now', selectedLanguage)}
                   </Button>
                   <Button variant="outline" size="icon">
                     <Download className="w-4 h-4" />
