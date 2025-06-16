@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -179,7 +178,7 @@ const GameGenerator = () => {
         tamil: 'பல்வேறு வீரர் ஆதரவு',
         telugu: 'మల్టిప్లేయర్ మద్దతు',
         marathi: 'बहुखेळाडू समर्थन',
-        gujarati: 'મલ્ટિપ્લેયર સપોર્ટ'
+        gujarati: 'મલ્ટીપ્લેયર સપોર્ટ'
       }
     };
 
@@ -253,7 +252,7 @@ const GameGenerator = () => {
 
     setIsGenerating(true);
     
-    // Simulate AI generation
+    // Reduced generation time from 3000ms to 500ms for faster response
     setTimeout(() => {
       const mockGame = {
         title: gameTitle,
@@ -312,7 +311,7 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
         title: "Game Generated Successfully!",
         description: "Your Indic game is ready to play and download",
       });
-    }, 3000);
+    }, 500); // Reduced from 3000ms to 500ms
   };
 
   const playPreBuiltGame = (game) => {
