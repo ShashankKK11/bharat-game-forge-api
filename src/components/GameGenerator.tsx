@@ -43,61 +43,7 @@ const GameGenerator = () => {
     'Art - Madhubani', 'Art - Warli', 'Art - Tanjore Painting'
   ];
 
-  // 3D Game Icon Component with fixed styling
-  const GameIcon3D = ({ gameType, size = "w-16 h-16" }) => {
-    const getIconContent = (type) => {
-      const iconMap = {
-        'ramayana': { emoji: '🏹', color: 'from-orange-400 to-red-500' },
-        'mahabharata': { emoji: '⚔️', color: 'from-blue-400 to-purple-500' },
-        'diwali': { emoji: '🪔', color: 'from-yellow-400 to-orange-500' },
-        'dance': { emoji: '💃', color: 'from-pink-400 to-purple-500' },
-        'spice': { emoji: '🌶️', color: 'from-green-400 to-yellow-500' },
-        'temple': { emoji: '🏛️', color: 'from-amber-400 to-orange-500' },
-        'warrior': { emoji: '🛡️', color: 'from-red-400 to-orange-500' },
-        'hanuman': { emoji: '🐵', color: 'from-orange-400 to-red-500' },
-        'martial': { emoji: '🥋', color: 'from-blue-400 to-green-500' },
-        'durga': { emoji: '👸', color: 'from-purple-400 to-pink-500' },
-        'shiva': { emoji: '🕉️', color: 'from-blue-400 to-purple-500' },
-        'default': { emoji: '🎮', color: 'from-purple-400 to-blue-500' }
-      };
-      
-      return iconMap[type] || iconMap.default;
-    };
-
-    const { emoji, color } = getIconContent(gameType);
-
-    return (
-      <div className={`${size} relative`}>
-        <style dangerouslySetInnerHTML={{
-          __html: `
-            @keyframes float {
-              0%, 100% { transform: translateY(0px) rotateY(0deg); }
-              33% { transform: translateY(-10px) rotateY(5deg); }
-              66% { transform: translateY(-5px) rotateY(-5deg); }
-            }
-            .hover-rotate-y-12:hover {
-              transform: rotateY(12deg) scale(1.1);
-            }
-          `
-        }} />
-        <div 
-          className={`${size} bg-gradient-to-br ${color} rounded-xl shadow-2xl transform-gpu transition-all duration-300 hover:scale-110 hover-rotate-y-12 flex items-center justify-center text-white text-2xl font-bold cursor-pointer`}
-          style={{
-            transformStyle: 'preserve-3d',
-            perspective: '1000px',
-            animation: 'float 3s ease-in-out infinite'
-          }}
-        >
-          <div className="absolute inset-0 bg-white/20 rounded-xl transform translate-z-2"></div>
-          <span className="relative z-10 text-3xl drop-shadow-lg transform hover:scale-125 transition-transform duration-200">
-            {emoji}
-          </span>
-          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-        </div>
-      </div>
-    );
-  };
-
+  // Pre-built games that users can instantly play - these will be translated based on selected language
   const preBuiltGames = [
     {
       title: "Ramayana Quest",
@@ -105,8 +51,7 @@ const GameGenerator = () => {
       theme: "mythology - ramayana",
       description: "Join Prince Rama on his epic journey through exile, the search for Sita, and the battle against Ravana.",
       mechanics: ['Story Progression', 'Character Development', 'Battle System', 'Quest Management'],
-      features: ['Voice Narration', 'Interactive Choices', 'Cultural Learning', 'Achievement System'],
-      iconType: 'ramayana'
+      features: ['Voice Narration', 'Interactive Choices', 'Cultural Learning', 'Achievement System']
     },
     {
       title: "Mahabharata Legends",
@@ -114,8 +59,7 @@ const GameGenerator = () => {
       theme: "mythology - mahabharata",
       description: "Experience the great war of Kurukshetra and make crucial decisions that shape the destiny of kingdoms.",
       mechanics: ['Strategic Combat', 'Diplomatic Choices', 'Resource Management', 'Alliance Building'],
-      features: ['Multiple Endings', 'Historical Accuracy', 'Character Relationships', 'Moral Dilemmas'],
-      iconType: 'mahabharata'
+      features: ['Multiple Endings', 'Historical Accuracy', 'Character Relationships', 'Moral Dilemmas']
     },
     {
       title: "Festival Celebrations",
@@ -123,8 +67,7 @@ const GameGenerator = () => {
       theme: "festival - diwali",
       description: "Plan and organize traditional Indian festivals, learn customs, and spread joy in the community.",
       mechanics: ['Event Planning', 'Resource Management', 'Community Building', 'Cultural Learning'],
-      features: ['Regional Variations', 'Recipe Collection', 'Decoration Crafting', 'Social Sharing'],
-      iconType: 'diwali'
+      features: ['Regional Variations', 'Recipe Collection', 'Decoration Crafting', 'Social Sharing']
     },
     {
       title: "Classical Dance Academy",
@@ -132,8 +75,7 @@ const GameGenerator = () => {
       theme: "culture - classical dance",
       description: "Learn and master traditional Indian dance forms through interactive gameplay and cultural education.",
       mechanics: ['Rhythm Matching', 'Pose Recognition', 'Story Interpretation', 'Performance Scoring'],
-      features: ['Multiple Dance Forms', 'Cultural Context', 'Progressive Learning', 'Performance Mode'],
-      iconType: 'dance'
+      features: ['Multiple Dance Forms', 'Cultural Context', 'Progressive Learning', 'Performance Mode']
     },
     {
       title: "Spice Route Trader",
@@ -141,8 +83,7 @@ const GameGenerator = () => {
       theme: "cuisine - spices & herbs",
       description: "Navigate ancient trade routes, discover exotic spices, and build your trading empire across India.",
       mechanics: ['Trade Management', 'Route Planning', 'Market Analysis', 'Cultural Exchange'],
-      features: ['Historical Accuracy', 'Recipe Discovery', 'Economic Strategy', 'Cultural Learning'],
-      iconType: 'spice'
+      features: ['Historical Accuracy', 'Recipe Discovery', 'Economic Strategy', 'Cultural Learning']
     },
     {
       title: "Temple Architecture Builder",
@@ -150,8 +91,7 @@ const GameGenerator = () => {
       theme: "architecture - temples",
       description: "Design and construct magnificent Indian temples while learning about architectural principles and cultural significance.",
       mechanics: ['Building Design', 'Resource Management', 'Historical Accuracy', 'Cultural Integration'],
-      features: ['Authentic Styles', 'Educational Content', 'Visual Showcase', 'Historical Context'],
-      iconType: 'temple'
+      features: ['Authentic Styles', 'Educational Content', 'Visual Showcase', 'Historical Context']
     },
     {
       title: "Warrior's Path: Arjuna",
@@ -159,8 +99,7 @@ const GameGenerator = () => {
       theme: "mythology - mahabharata",
       description: "Master archery skills as Arjuna in fast-paced action sequences. Defend dharma through precise combat.",
       mechanics: ['Real-time Combat', 'Archery System', 'Combo Attacks', 'Enemy Waves'],
-      features: ['Fast-paced Action', 'Skill Progression', 'Epic Boss Battles', 'Mythological Weapons'],
-      iconType: 'warrior'
+      features: ['Fast-paced Action', 'Skill Progression', 'Epic Boss Battles', 'Mythological Weapons']
     },
     {
       title: "Hanuman's Flight",
@@ -168,8 +107,7 @@ const GameGenerator = () => {
       theme: "mythology - hanuman chalisa",
       description: "Soar through the skies as Hanuman, collecting sacred items and battling demons in aerial combat.",
       mechanics: ['Flying Mechanics', 'Aerial Combat', 'Item Collection', 'Power-ups'],
-      features: ['Flight Controls', 'Divine Powers', 'Obstacle Courses', 'Time Challenges'],
-      iconType: 'hanuman'
+      features: ['Flight Controls', 'Divine Powers', 'Obstacle Courses', 'Time Challenges']
     },
     {
       title: "Kalaripayattu Master",
@@ -177,8 +115,7 @@ const GameGenerator = () => {
       theme: "culture - martial arts",
       description: "Learn and master the ancient martial art of Kalaripayattu through intense training and combat challenges.",
       mechanics: ['Combo System', 'Weapon Mastery', 'Training Modes', 'Tournament Battles'],
-      features: ['Authentic Techniques', 'Progressive Difficulty', 'Master Classes', 'Cultural History'],
-      iconType: 'martial'
+      features: ['Authentic Techniques', 'Progressive Difficulty', 'Master Classes', 'Cultural History']
     },
     {
       title: "Durga's Conquest",
@@ -186,8 +123,7 @@ const GameGenerator = () => {
       theme: "mythology - goddess durga",
       description: "Channel the power of Goddess Durga to defeat evil forces in epic battle sequences.",
       mechanics: ['Multi-weapon Combat', 'Divine Powers', 'Boss Battles', 'Transformation System'],
-      features: ['Multiple Weapons', 'Special Abilities', 'Epic Storyline', 'Visual Effects'],
-      iconType: 'durga'
+      features: ['Multiple Weapons', 'Special Abilities', 'Epic Storyline', 'Visual Effects']
     },
     {
       title: "Shiva's Dance Warrior",
@@ -195,99 +131,110 @@ const GameGenerator = () => {
       theme: "mythology - shiva purana",
       description: "Perform the cosmic dance of destruction and creation while battling cosmic forces.",
       mechanics: ['Rhythm-based Combat', 'Dance Combinations', 'Elemental Powers', 'Cosmic Battles'],
-      features: ['Unique Combat Style', 'Cosmic Powers', 'Rhythm Gameplay', 'Spiritual Journey'],
-      iconType: 'shiva'
+      features: ['Unique Combat Style', 'Cosmic Powers', 'Rhythm Gameplay', 'Spiritual Journey']
     }
   ];
 
+  // Translate pre-built games based on selected language
   const translatedPreBuiltGames = preBuiltGames.map(game => translateGameContent(game, selectedLanguage));
 
-  const translateGameMechanics = (mechanics, targetLanguage) => {
-    if (targetLanguage === 'english') return mechanics;
-    
-    const mechanicsTranslations = {
+  // Function to translate game mechanics and features
+  const translateGameMechanics = (mechanics: string[], targetLanguage: string): string[] => {
+    const mechanicsTranslations: Record<string, Record<string, string>> = {
       'Turn-based gameplay': {
         hindi: 'बारी-बारी से खेल',
-        bengali: 'পালাক্রমে খেলা',
-        tamil: 'முறையான விளையாட்டு',
-        telugu: 'వంతల ఆట',
-        marathi: 'वळणावळणाने खेळ'
+        bengali: 'পালাক্রমে গেমপ্লে',
+        tamil: 'வரிசைக்கிரம விளையாட்டு',
+        telugu: 'వంతల వారీ గేమ్‌ప్లే',
+        marathi: 'वळण-आधारित खेळ',
+        gujarati: 'વારાફરતી ગેમપ્લે'
       },
       'Story-driven progression': {
         hindi: 'कहानी-संचालित प्रगति',
-        bengali: 'গল্প চালিত অগ্রগতি',
-        tamil: 'கதை சார்ந்த முன்னேற்றம்',
-        telugu: 'కథ ఆధారిత పురోగతి',
-        marathi: 'कथा चालित प्रगती'
+        bengali: 'গল্প-চালিত অগ্রগতি',
+        tamil: 'கதை அடிப்படையில் முன்னேற்றம்',
+        telugu: 'కథా ఆధారిత పురోగతి',
+        marathi: 'कथा-आधारित प्रगती',
+        gujarati: 'વાર્તા-આધારિત પ્રગતિ'
       },
       'Cultural quiz elements': {
         hindi: 'सांस्कृतिक प्रश्नोत्तरी तत्व',
         bengali: 'সাংস্কৃতিক কুইজ উপাদান',
-        tamil: 'பண்பாட்டு வினாடி வினா',
+        tamil: 'கலாசார வினாடி வினா கூறுகள்',
         telugu: 'సాంస్కృతిక క్విజ్ అంశాలు',
-        marathi: 'सांस्कृतिक प्रश्नमंजुषा घटक'
+        marathi: 'सांस्कृतिक प्रश्नमंजुषा घटक',
+        gujarati: 'સાંસ્કૃતિક ક્વિઝ તત્વો'
       },
       'Achievement system': {
         hindi: 'उपलब्धि प्रणाली',
         bengali: 'অর্জন ব্যবস্থা',
         tamil: 'சாதனை அமைப்பு',
-        telugu: 'విజయాల వ్యవస్థ',
-        marathi: 'यशस्वी प्रणाली'
+        telugu: 'అచీవ్‌మెంట్ సిస్టమ్',
+        marathi: 'उपलब्धी प्रणाली',
+        gujarati: 'સિદ્ધિ પ્રણાલી'
       },
       'Multiplayer support': {
         hindi: 'मल्टीप्लेयर समर्थन',
-        bengali: 'মাল্টিপ্লেয়ার সাপোর্ট',
-        tamil: 'பல வீரர் ஆதரவு',
-        telugu: 'బహుళ ఆటగాड్ల మద్దతు',
-        marathi: 'बहुखेळाडू समर्थन'
+        bengali: 'মাল্টিপ্লেয়ার সমর্থন',
+        tamil: 'பல்வேறு வீரர் ஆதரவு',
+        telugu: 'మల్టిప్లేయర్ మద్దతు',
+        marathi: 'बहुखेळाडू समर्थन',
+        gujarati: 'મલ્ટિપ્લેયર સપોર્ટ'
       }
     };
+
+    if (targetLanguage === 'english') return mechanics;
     
     return mechanics.map(mechanic => 
       mechanicsTranslations[mechanic]?.[targetLanguage] || mechanic
     );
   };
 
-  const translateGameFeatures = (features, targetLanguage) => {
-    if (targetLanguage === 'english') return features;
-    
-    const featuresTranslations = {
+  const translateGameFeatures = (features: string[], targetLanguage: string): string[] => {
+    const featuresTranslations: Record<string, Record<string, string>> = {
       'Voice narration in selected language': {
         hindi: 'चयनित भाषा में आवाज़ वर्णन',
-        bengali: 'নির্বাচিত ভাষায় কণ্ঠ বর্ণনা',
-        tamil: 'தேர்ந்தெடுக்கப்பட்ட மொழியில் குரல் விளக்கம்',
-        telugu: 'ఎంచుకున్న భాషలో వాయిస్ వివరణ',
-        marathi: 'निवडलेल्या भाषेत आवाज वर्णन'
+        bengali: 'নির্বাচিত ভাষায় কণ্ঠস্বর বর্ণনা',
+        tamil: 'தேர்ந்தெடுக்கப்பட்ட மொழியில் குரல் விவரணை',
+        telugu: 'ఎంచుకున్న భాషలో వాయిస్ నరేషన్',
+        marathi: 'निवडलेल्या भाषेत आवाज वर्णन',
+        gujarati: 'પસંદ કરેલી ભાષામાં અવાજ વર્ણન'
       },
       'Authentic cultural graphics': {
         hindi: 'प्रामाणिक सांस्कृतिक ग्राफिक्स',
-        bengali: 'খাঁটি সাংস্কৃতিক গ্রাফিক্স',
-        tamil: 'உண்மையான பண்பாட்டு கிராபிக்ஸ்',
-        telugu: 'ప్రామాణిక సాంస్కృతిక గ్రాఫిక్స్',
-        marathi: 'अस्सल सांस्कृतिक ग्राफिक्स'
+        bengali: 'সত্যিকারের সাংস্কৃতিক গ্রাফিক্স',
+        tamil: 'உண்மையான கலாசார கிராபிக்ஸ்',
+        telugu: 'నిజమైన సాంస్కృతిక గ్రాఫిక్స్',
+        marathi: 'अस्सल सांस्कृतिक ग्राफिक्स',
+        gujarati: 'અસલી સાંસ્કૃતિક ગ્રાફિક્સ'
       },
       'Educational content integration': {
         hindi: 'शैक्षिक सामग्री एकीकरण',
         bengali: 'শিক্ষামূলক বিষয়বস্তু একীকরণ',
         tamil: 'கல்வி உள்ளடக்க ஒருங்கிணைப்பு',
-        telugu: 'విద్యా కంటెంట్ ఏకీకరణ',
-        marathi: 'शैक्षणिक सामग्री एकत्रीकरण'
+        telugu: 'విద్యా కంటెంట్ ఇంటిగ్రేషన్',
+        marathi: 'शैक्षणिक सामग्री एकत्रीकरण',
+        gujarati: 'શૈક્ષણિક સામગ્રી એકીકરણ'
       },
       'Leaderboard system': {
         hindi: 'लीडरबोर्ड प्रणाली',
         bengali: 'লিডারবোর্ড সিস্টেম',
-        tamil: 'தலைமை பலகை அமைப்பு',
-        telugu: 'లీడర్‌బోర్డ్ వ్యవస్థ',
-        marathi: 'लीडरबोर्ड सिस्टम'
+        tamil: 'தலைவர் பலகை அமைப்பு',
+        telugu: 'లీడర్‌బోర్డ్ సిస్టమ్',
+        marathi: 'लीडरबोर्ड प्रणाली',
+        gujarati: 'લીડરબોર્ડ સિસ્ટમ'
       },
       'Offline play support': {
         hindi: 'ऑफलाइन खेल समर्थन',
-        bengali: 'অফলাইন খেলার সাপোর্ট',
+        bengali: 'অফলাইন খেলা সমর্থন',
         tamil: 'ஆஃப்லைன் விளையாட்டு ஆதரவு',
-        telugu: 'ఆఫ్‌లైన్ ఆట మద్దతు',
-        marathi: 'ऑफलाइन खेळ समर्थन'
+        telugu: 'ఆఫ్‌లైన్ ప్లే మద్దతు',
+        marathi: 'ऑफलाइन खेळ समर्थन',
+        gujarati: 'ઓફલાઇન પ્લે સપોર્ટ'
       }
     };
+
+    if (targetLanguage === 'english') return features;
     
     return features.map(feature => 
       featuresTranslations[feature]?.[targetLanguage] || feature
@@ -306,26 +253,27 @@ const GameGenerator = () => {
 
     setIsGenerating(true);
     
+    // Simulate AI generation
     setTimeout(() => {
       const mockGame = {
         title: gameTitle,
         genre: gameGenre,
         theme: gameTheme,
         description: gameDescription || `An immersive ${gameGenre} game exploring ${gameTheme}`,
-        mechanics: translateGameMechanics([
+        mechanics: [
           'Turn-based gameplay',
           'Story-driven progression',
           'Cultural quiz elements',
           'Achievement system',
           'Multiplayer support'
-        ], selectedLanguage),
-        features: translateGameFeatures([
+        ],
+        features: [
           'Voice narration in selected language',
           'Authentic cultural graphics',
           'Educational content integration',
           'Leaderboard system',
           'Offline play support'
-        ], selectedLanguage),
+        ],
         codeSnippet: `// Generated Game Structure
 const ${gameTitle.replace(/\s+/g, '')}Game = {
   title: "${gameTitle}",
@@ -343,12 +291,19 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
     fonts: "devanagari_unicode"
   }
 };`,
-        downloadUrl: '#',
-        language: selectedLanguage
+        downloadUrl: '#'
       };
       
-      // Translate the game content to selected language
-      const translatedGame = translateGameContent(mockGame, selectedLanguage);
+      // Translate the generated game content
+      const translatedGame = {
+        ...mockGame,
+        title: translateGameContent({ title: mockGame.title }, selectedLanguage).title,
+        description: translateGameContent({ description: mockGame.description }, selectedLanguage).description,
+        genre: translateText(mockGame.genre, selectedLanguage),
+        mechanics: translateGameMechanics(mockGame.mechanics, selectedLanguage),
+        features: translateGameFeatures(mockGame.features, selectedLanguage),
+        language: selectedLanguage
+      };
       
       setGeneratedGame(translatedGame);
       setIsGenerating(false);
@@ -357,7 +312,7 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
         title: "Game Generated Successfully!",
         description: "Your Indic game is ready to play and download",
       });
-    }, 200);
+    }, 3000);
   };
 
   const playPreBuiltGame = (game) => {
@@ -398,17 +353,14 @@ const ${translatedGame.title.replace(/\s+/g, '')}Game = {
           </p>
         </div>
 
-        {/* Pre-built Games Section with 3D Icons */}
+        {/* Pre-built Games Section */}
         <div className="mb-12">
           <h3 className="text-2xl font-bold text-center mb-8 text-purple-800">🎮 Ready-to-Play Games</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {translatedPreBuiltGames.map((game, index) => (
-              <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white to-purple-50 overflow-hidden">
+              <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white to-purple-50">
                 <CardHeader className="pb-3">
-                  <div className="flex items-center gap-3 mb-2">
-                    <GameIcon3D gameType={preBuiltGames[index].iconType} size="w-12 h-12" />
-                    <CardTitle className="text-lg text-purple-800">{game.title}</CardTitle>
-                  </div>
+                  <CardTitle className="text-lg text-purple-800">{game.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-600 mb-3">{game.description}</p>
@@ -536,7 +488,7 @@ const ${translatedGame.title.replace(/\s+/g, '')}Game = {
             </CardContent>
           </Card>
 
-          {/* Generated Game Display with 3D Icon */}
+          {/* Generated Game Display */}
           <div className="space-y-6">
             {generatedGame ? (
               <GamePreview game={generatedGame} />
@@ -545,9 +497,10 @@ const ${translatedGame.title.replace(/\s+/g, '')}Game = {
                 <CardContent className="py-16 text-center">
                   <div className="text-gray-400 mb-4">
                     <div className="relative inline-block">
-                      <GameIcon3D gameType="default" size="w-20 h-20" />
+                      <Wand2 className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                      <div className="absolute top-0 right-0 w-6 h-6 bg-purple-200 rounded-full animate-bounce"></div>
                     </div>
-                    <h3 className="text-xl font-semibold mt-4">Your Generated Game Will Appear Here</h3>
+                    <h3 className="text-xl font-semibold">Your Generated Game Will Appear Here</h3>
                     <p className="text-gray-500 mt-2">Choose from ready-to-play games above or create your custom game</p>
                   </div>
                 </CardContent>
