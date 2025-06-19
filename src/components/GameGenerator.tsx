@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,7 +42,59 @@ const GameGenerator = () => {
     'Art - Madhubani', 'Art - Warli', 'Art - Tanjore Painting'
   ];
 
-  // Pre-built games that users can instantly play - these will be translated based on selected language
+  // 3D Game Icon Component
+  const GameIcon3D = ({ gameType, size = "w-16 h-16" }) => {
+    const getIconContent = (type) => {
+      const iconMap = {
+        'ramayana': { emoji: '🏹', color: 'from-orange-400 to-red-500' },
+        'mahabharata': { emoji: '⚔️', color: 'from-blue-400 to-purple-500' },
+        'diwali': { emoji: '🪔', color: 'from-yellow-400 to-orange-500' },
+        'dance': { emoji: '💃', color: 'from-pink-400 to-purple-500' },
+        'spice': { emoji: '🌶️', color: 'from-green-400 to-yellow-500' },
+        'temple': { emoji: '🏛️', color: 'from-amber-400 to-orange-500' },
+        'warrior': { emoji: '🛡️', color: 'from-red-400 to-orange-500' },
+        'hanuman': { emoji: '🐵', color: 'from-orange-400 to-red-500' },
+        'martial': { emoji: '🥋', color: 'from-blue-400 to-green-500' },
+        'durga': { emoji: '👸', color: 'from-purple-400 to-pink-500' },
+        'shiva': { emoji: '🕉️', color: 'from-blue-400 to-purple-500' },
+        'default': { emoji: '🎮', color: 'from-purple-400 to-blue-500' }
+      };
+      
+      return iconMap[type] || iconMap.default;
+    };
+
+    const { emoji, color } = getIconContent(gameType);
+
+    return (
+      <div className={`${size} relative`}>
+        <div 
+          className={`${size} bg-gradient-to-br ${color} rounded-xl shadow-2xl transform-gpu transition-all duration-300 hover:scale-110 hover:rotate-y-12 flex items-center justify-center text-white text-2xl font-bold cursor-pointer`}
+          style={{
+            transformStyle: 'preserve-3d',
+            perspective: '1000px',
+            animation: 'float 3s ease-in-out infinite'
+          }}
+        >
+          <div className="absolute inset-0 bg-white/20 rounded-xl transform translate-z-2"></div>
+          <span className="relative z-10 text-3xl drop-shadow-lg transform hover:scale-125 transition-transform duration-200">
+            {emoji}
+          </span>
+          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+        </div>
+        <style jsx>{`
+          @keyframes float {
+            0%, 100% { transform: translateY(0px) rotateY(0deg); }
+            33% { transform: translateY(-10px) rotateY(5deg); }
+            66% { transform: translateY(-5px) rotateY(-5deg); }
+          }
+          .hover\\:rotate-y-12:hover {
+            transform: rotateY(12deg) scale(1.1);
+          }
+        `}</style>
+      </div>
+    );
+  };
+
   const preBuiltGames = [
     {
       title: "Ramayana Quest",
@@ -51,7 +102,8 @@ const GameGenerator = () => {
       theme: "mythology - ramayana",
       description: "Join Prince Rama on his epic journey through exile, the search for Sita, and the battle against Ravana.",
       mechanics: ['Story Progression', 'Character Development', 'Battle System', 'Quest Management'],
-      features: ['Voice Narration', 'Interactive Choices', 'Cultural Learning', 'Achievement System']
+      features: ['Voice Narration', 'Interactive Choices', 'Cultural Learning', 'Achievement System'],
+      iconType: 'ramayana'
     },
     {
       title: "Mahabharata Legends",
@@ -59,7 +111,8 @@ const GameGenerator = () => {
       theme: "mythology - mahabharata",
       description: "Experience the great war of Kurukshetra and make crucial decisions that shape the destiny of kingdoms.",
       mechanics: ['Strategic Combat', 'Diplomatic Choices', 'Resource Management', 'Alliance Building'],
-      features: ['Multiple Endings', 'Historical Accuracy', 'Character Relationships', 'Moral Dilemmas']
+      features: ['Multiple Endings', 'Historical Accuracy', 'Character Relationships', 'Moral Dilemmas'],
+      iconType: 'mahabharata'
     },
     {
       title: "Festival Celebrations",
@@ -67,7 +120,8 @@ const GameGenerator = () => {
       theme: "festival - diwali",
       description: "Plan and organize traditional Indian festivals, learn customs, and spread joy in the community.",
       mechanics: ['Event Planning', 'Resource Management', 'Community Building', 'Cultural Learning'],
-      features: ['Regional Variations', 'Recipe Collection', 'Decoration Crafting', 'Social Sharing']
+      features: ['Regional Variations', 'Recipe Collection', 'Decoration Crafting', 'Social Sharing'],
+      iconType: 'diwali'
     },
     {
       title: "Classical Dance Academy",
@@ -75,7 +129,8 @@ const GameGenerator = () => {
       theme: "culture - classical dance",
       description: "Learn and master traditional Indian dance forms through interactive gameplay and cultural education.",
       mechanics: ['Rhythm Matching', 'Pose Recognition', 'Story Interpretation', 'Performance Scoring'],
-      features: ['Multiple Dance Forms', 'Cultural Context', 'Progressive Learning', 'Performance Mode']
+      features: ['Multiple Dance Forms', 'Cultural Context', 'Progressive Learning', 'Performance Mode'],
+      iconType: 'dance'
     },
     {
       title: "Spice Route Trader",
@@ -83,7 +138,8 @@ const GameGenerator = () => {
       theme: "cuisine - spices & herbs",
       description: "Navigate ancient trade routes, discover exotic spices, and build your trading empire across India.",
       mechanics: ['Trade Management', 'Route Planning', 'Market Analysis', 'Cultural Exchange'],
-      features: ['Historical Accuracy', 'Recipe Discovery', 'Economic Strategy', 'Cultural Learning']
+      features: ['Historical Accuracy', 'Recipe Discovery', 'Economic Strategy', 'Cultural Learning'],
+      iconType: 'spice'
     },
     {
       title: "Temple Architecture Builder",
@@ -91,7 +147,8 @@ const GameGenerator = () => {
       theme: "architecture - temples",
       description: "Design and construct magnificent Indian temples while learning about architectural principles and cultural significance.",
       mechanics: ['Building Design', 'Resource Management', 'Historical Accuracy', 'Cultural Integration'],
-      features: ['Authentic Styles', 'Educational Content', 'Visual Showcase', 'Historical Context']
+      features: ['Authentic Styles', 'Educational Content', 'Visual Showcase', 'Historical Context'],
+      iconType: 'temple'
     },
     {
       title: "Warrior's Path: Arjuna",
@@ -99,7 +156,8 @@ const GameGenerator = () => {
       theme: "mythology - mahabharata",
       description: "Master archery skills as Arjuna in fast-paced action sequences. Defend dharma through precise combat.",
       mechanics: ['Real-time Combat', 'Archery System', 'Combo Attacks', 'Enemy Waves'],
-      features: ['Fast-paced Action', 'Skill Progression', 'Epic Boss Battles', 'Mythological Weapons']
+      features: ['Fast-paced Action', 'Skill Progression', 'Epic Boss Battles', 'Mythological Weapons'],
+      iconType: 'warrior'
     },
     {
       title: "Hanuman's Flight",
@@ -107,7 +165,8 @@ const GameGenerator = () => {
       theme: "mythology - hanuman chalisa",
       description: "Soar through the skies as Hanuman, collecting sacred items and battling demons in aerial combat.",
       mechanics: ['Flying Mechanics', 'Aerial Combat', 'Item Collection', 'Power-ups'],
-      features: ['Flight Controls', 'Divine Powers', 'Obstacle Courses', 'Time Challenges']
+      features: ['Flight Controls', 'Divine Powers', 'Obstacle Courses', 'Time Challenges'],
+      iconType: 'hanuman'
     },
     {
       title: "Kalaripayattu Master",
@@ -115,7 +174,8 @@ const GameGenerator = () => {
       theme: "culture - martial arts",
       description: "Learn and master the ancient martial art of Kalaripayattu through intense training and combat challenges.",
       mechanics: ['Combo System', 'Weapon Mastery', 'Training Modes', 'Tournament Battles'],
-      features: ['Authentic Techniques', 'Progressive Difficulty', 'Master Classes', 'Cultural History']
+      features: ['Authentic Techniques', 'Progressive Difficulty', 'Master Classes', 'Cultural History'],
+      iconType: 'martial'
     },
     {
       title: "Durga's Conquest",
@@ -123,7 +183,8 @@ const GameGenerator = () => {
       theme: "mythology - goddess durga",
       description: "Channel the power of Goddess Durga to defeat evil forces in epic battle sequences.",
       mechanics: ['Multi-weapon Combat', 'Divine Powers', 'Boss Battles', 'Transformation System'],
-      features: ['Multiple Weapons', 'Special Abilities', 'Epic Storyline', 'Visual Effects']
+      features: ['Multiple Weapons', 'Special Abilities', 'Epic Storyline', 'Visual Effects'],
+      iconType: 'durga'
     },
     {
       title: "Shiva's Dance Warrior",
@@ -131,14 +192,13 @@ const GameGenerator = () => {
       theme: "mythology - shiva purana",
       description: "Perform the cosmic dance of destruction and creation while battling cosmic forces.",
       mechanics: ['Rhythm-based Combat', 'Dance Combinations', 'Elemental Powers', 'Cosmic Battles'],
-      features: ['Unique Combat Style', 'Cosmic Powers', 'Rhythm Gameplay', 'Spiritual Journey']
+      features: ['Unique Combat Style', 'Cosmic Powers', 'Rhythm Gameplay', 'Spiritual Journey'],
+      iconType: 'shiva'
     }
   ];
 
-  // Translate pre-built games based on selected language
   const translatedPreBuiltGames = preBuiltGames.map(game => translateGameContent(game, selectedLanguage));
 
-  // Optimized translation functions with pre-computed mappings
   const quickTranslateGameMechanics = (mechanics, targetLanguage) => {
     if (targetLanguage === 'english') return mechanics;
     
@@ -179,27 +239,26 @@ const GameGenerator = () => {
 
     setIsGenerating(true);
     
-    // Reduced generation time and optimized translation
     setTimeout(() => {
       const mockGame = {
         title: gameTitle,
         genre: gameGenre,
         theme: gameTheme,
         description: gameDescription || `An immersive ${gameGenre} game exploring ${gameTheme}`,
-        mechanics: [
+        mechanics: quickTranslateGameMechanics([
           'Turn-based gameplay',
           'Story-driven progression',
           'Cultural quiz elements',
           'Achievement system',
           'Multiplayer support'
-        ],
-        features: [
+        ], selectedLanguage),
+        features: quickTranslateGameFeatures([
           'Voice narration in selected language',
           'Authentic cultural graphics',
           'Educational content integration',
           'Leaderboard system',
           'Offline play support'
-        ],
+        ], selectedLanguage),
         codeSnippet: `// Generated Game Structure
 const ${gameTitle.replace(/\s+/g, '')}Game = {
   title: "${gameTitle}",
@@ -220,25 +279,14 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
         downloadUrl: '#'
       };
       
-      // Fast translation using optimized functions
-      const translatedGame = {
-        ...mockGame,
-        title: selectedLanguage === 'english' ? mockGame.title : translateText(mockGame.title, selectedLanguage),
-        description: selectedLanguage === 'english' ? mockGame.description : mockGame.description,
-        genre: selectedLanguage === 'english' ? mockGame.genre : translateText(mockGame.genre, selectedLanguage),
-        mechanics: quickTranslateGameMechanics(mockGame.mechanics, selectedLanguage),
-        features: quickTranslateGameFeatures(mockGame.features, selectedLanguage),
-        language: selectedLanguage
-      };
-      
-      setGeneratedGame(translatedGame);
+      setGeneratedGame(mockGame);
       setIsGenerating(false);
       
       toast({
         title: "Game Generated Successfully!",
         description: "Your Indic game is ready to play and download",
       });
-    }, 200); // Reduced from 500ms to 200ms
+    }, 200);
   };
 
   const playPreBuiltGame = (game) => {
@@ -279,14 +327,17 @@ const ${translatedGame.title.replace(/\s+/g, '')}Game = {
           </p>
         </div>
 
-        {/* Pre-built Games Section */}
+        {/* Pre-built Games Section with 3D Icons */}
         <div className="mb-12">
           <h3 className="text-2xl font-bold text-center mb-8 text-purple-800">🎮 Ready-to-Play Games</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {translatedPreBuiltGames.map((game, index) => (
-              <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white to-purple-50">
+              <Card key={index} className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white to-purple-50 overflow-hidden">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-purple-800">{game.title}</CardTitle>
+                  <div className="flex items-center gap-3 mb-2">
+                    <GameIcon3D gameType={preBuiltGames[index].iconType} size="w-12 h-12" />
+                    <CardTitle className="text-lg text-purple-800">{game.title}</CardTitle>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-600 mb-3">{game.description}</p>
@@ -414,7 +465,7 @@ const ${translatedGame.title.replace(/\s+/g, '')}Game = {
             </CardContent>
           </Card>
 
-          {/* Generated Game Display */}
+          {/* Generated Game Display with 3D Icon */}
           <div className="space-y-6">
             {generatedGame ? (
               <GamePreview game={generatedGame} />
@@ -423,10 +474,9 @@ const ${translatedGame.title.replace(/\s+/g, '')}Game = {
                 <CardContent className="py-16 text-center">
                   <div className="text-gray-400 mb-4">
                     <div className="relative inline-block">
-                      <Wand2 className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                      <div className="absolute top-0 right-0 w-6 h-6 bg-purple-200 rounded-full animate-bounce"></div>
+                      <GameIcon3D gameType="default" size="w-20 h-20" />
                     </div>
-                    <h3 className="text-xl font-semibold">Your Generated Game Will Appear Here</h3>
+                    <h3 className="text-xl font-semibold mt-4">Your Generated Game Will Appear Here</h3>
                     <p className="text-gray-500 mt-2">Choose from ready-to-play games above or create your custom game</p>
                   </div>
                 </CardContent>
