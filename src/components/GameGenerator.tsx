@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,7 +43,7 @@ const GameGenerator = () => {
     'Art - Madhubani', 'Art - Warli', 'Art - Tanjore Painting'
   ];
 
-  // 3D Game Icon Component
+  // 3D Game Icon Component with fixed styling
   const GameIcon3D = ({ gameType, size = "w-16 h-16" }) => {
     const getIconContent = (type) => {
       const iconMap = {
@@ -67,8 +68,20 @@ const GameGenerator = () => {
 
     return (
       <div className={`${size} relative`}>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes float {
+              0%, 100% { transform: translateY(0px) rotateY(0deg); }
+              33% { transform: translateY(-10px) rotateY(5deg); }
+              66% { transform: translateY(-5px) rotateY(-5deg); }
+            }
+            .hover-rotate-y-12:hover {
+              transform: rotateY(12deg) scale(1.1);
+            }
+          `
+        }} />
         <div 
-          className={`${size} bg-gradient-to-br ${color} rounded-xl shadow-2xl transform-gpu transition-all duration-300 hover:scale-110 hover:rotate-y-12 flex items-center justify-center text-white text-2xl font-bold cursor-pointer`}
+          className={`${size} bg-gradient-to-br ${color} rounded-xl shadow-2xl transform-gpu transition-all duration-300 hover:scale-110 hover-rotate-y-12 flex items-center justify-center text-white text-2xl font-bold cursor-pointer`}
           style={{
             transformStyle: 'preserve-3d',
             perspective: '1000px',
@@ -81,16 +94,6 @@ const GameGenerator = () => {
           </span>
           <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
         </div>
-        <style jsx>{`
-          @keyframes float {
-            0%, 100% { transform: translateY(0px) rotateY(0deg); }
-            33% { transform: translateY(-10px) rotateY(5deg); }
-            66% { transform: translateY(-5px) rotateY(-5deg); }
-          }
-          .hover\\:rotate-y-12:hover {
-            transform: rotateY(12deg) scale(1.1);
-          }
-        `}</style>
       </div>
     );
   };
@@ -199,32 +202,96 @@ const GameGenerator = () => {
 
   const translatedPreBuiltGames = preBuiltGames.map(game => translateGameContent(game, selectedLanguage));
 
-  const quickTranslateGameMechanics = (mechanics, targetLanguage) => {
+  const translateGameMechanics = (mechanics, targetLanguage) => {
     if (targetLanguage === 'english') return mechanics;
     
-    const quickTranslations = {
-      'Turn-based gameplay': selectedLanguage === 'hindi' ? 'बारी-बारी से खेल' : 'Turn-based gameplay',
-      'Story-driven progression': selectedLanguage === 'hindi' ? 'कहानी-संचालित प्रगति' : 'Story-driven progression',
-      'Cultural quiz elements': selectedLanguage === 'hindi' ? 'सांस्कृतिक प्रश्नोत्तरी तत्व' : 'Cultural quiz elements',
-      'Achievement system': selectedLanguage === 'hindi' ? 'उपलब्धि प्रणाली' : 'Achievement system',
-      'Multiplayer support': selectedLanguage === 'hindi' ? 'मल्टीप्लेयर समर्थन' : 'Multiplayer support'
+    const mechanicsTranslations = {
+      'Turn-based gameplay': {
+        hindi: 'बारी-बारी से खेल',
+        bengali: 'পালাক্রমে খেলা',
+        tamil: 'முறையான விளையாட்டு',
+        telugu: 'వంతల ఆట',
+        marathi: 'वळणावळणाने खेळ'
+      },
+      'Story-driven progression': {
+        hindi: 'कहानी-संचालित प्रगति',
+        bengali: 'গল্প চালিত অগ্রগতি',
+        tamil: 'கதை சார்ந்த முன்னேற்றம்',
+        telugu: 'కథ ఆధారిత పురోగతి',
+        marathi: 'कथा चालित प्रगती'
+      },
+      'Cultural quiz elements': {
+        hindi: 'सांस्कृतिक प्रश्नोत्तरी तत्व',
+        bengali: 'সাংস্কৃতিক কুইজ উপাদান',
+        tamil: 'பண்பாட்டு வினாடி வினா',
+        telugu: 'సాంస్కృతిక క్విజ్ అంశాలు',
+        marathi: 'सांस्कृतिक प्रश्नमंजुषा घटक'
+      },
+      'Achievement system': {
+        hindi: 'उपलब्धि प्रणाली',
+        bengali: 'অর্জন ব্যবস্থা',
+        tamil: 'சாதனை அமைப்பு',
+        telugu: 'విజయాల వ్యవస్థ',
+        marathi: 'यशस्वी प्रणाली'
+      },
+      'Multiplayer support': {
+        hindi: 'मल्टीप्लेयर समर्थन',
+        bengali: 'মাল্টিপ্লেয়ার সাপোর্ট',
+        tamil: 'பல வீரர் ஆதரவு',
+        telugu: 'బహుళ ఆటగాड్ల మద్దతు',
+        marathi: 'बहुखेळाडू समर्थन'
+      }
     };
     
-    return mechanics.map(mechanic => quickTranslations[mechanic] || mechanic);
+    return mechanics.map(mechanic => 
+      mechanicsTranslations[mechanic]?.[targetLanguage] || mechanic
+    );
   };
 
-  const quickTranslateGameFeatures = (features, targetLanguage) => {
+  const translateGameFeatures = (features, targetLanguage) => {
     if (targetLanguage === 'english') return features;
     
-    const quickTranslations = {
-      'Voice narration in selected language': selectedLanguage === 'hindi' ? 'चयनित भाषा में आवाज़ वर्णन' : 'Voice narration in selected language',
-      'Authentic cultural graphics': selectedLanguage === 'hindi' ? 'प्रामाणिक सांस्कृतिक ग्राफिक्स' : 'Authentic cultural graphics',
-      'Educational content integration': selectedLanguage === 'hindi' ? 'शैक्षिक सामग्री एकीकरण' : 'Educational content integration',
-      'Leaderboard system': selectedLanguage === 'hindi' ? 'लीडरबोर्ड प्रणाली' : 'Leaderboard system',
-      'Offline play support': selectedLanguage === 'hindi' ? 'ऑफलाइन खेल समर्थन' : 'Offline play support'
+    const featuresTranslations = {
+      'Voice narration in selected language': {
+        hindi: 'चयनित भाषा में आवाज़ वर्णन',
+        bengali: 'নির্বাচিত ভাষায় কণ্ঠ বর্ণনা',
+        tamil: 'தேர்ந்தெடுக்கப்பட்ட மொழியில் குரல் விளக்கம்',
+        telugu: 'ఎంచుకున్న భాషలో వాయిస్ వివరణ',
+        marathi: 'निवडलेल्या भाषेत आवाज वर्णन'
+      },
+      'Authentic cultural graphics': {
+        hindi: 'प्रामाणिक सांस्कृतिक ग्राफिक्स',
+        bengali: 'খাঁটি সাংস্কৃতিক গ্রাফিক্স',
+        tamil: 'உண்மையான பண்பாட்டு கிராபிக்ஸ்',
+        telugu: 'ప్రామాణిక సాంస్కృతిక గ్రాఫిక్స్',
+        marathi: 'अस्सल सांस्कृतिक ग्राफिक्स'
+      },
+      'Educational content integration': {
+        hindi: 'शैक्षिक सामग्री एकीकरण',
+        bengali: 'শিক্ষামূলক বিষয়বস্তু একীকরণ',
+        tamil: 'கல்வி உள்ளடக்க ஒருங்கிணைப்பு',
+        telugu: 'విద్యా కంటెంట్ ఏకీకరణ',
+        marathi: 'शैक्षणिक सामग्री एकत्रीकरण'
+      },
+      'Leaderboard system': {
+        hindi: 'लीडरबोर्ड प्रणाली',
+        bengali: 'লিডারবোর্ড সিস্টেম',
+        tamil: 'தலைமை பலகை அமைப்பு',
+        telugu: 'లీడర్‌బోర్డ్ వ్యవస్థ',
+        marathi: 'लीडरबोर्ड सिस्टम'
+      },
+      'Offline play support': {
+        hindi: 'ऑफलाइन खेल समर्थन',
+        bengali: 'অফলাইন খেলার সাপোর্ট',
+        tamil: 'ஆஃப்லைன் விளையாட்டு ஆதரவு',
+        telugu: 'ఆఫ్‌లైన్ ఆట మద్దతు',
+        marathi: 'ऑफलाइन खेळ समर्थन'
+      }
     };
     
-    return features.map(feature => quickTranslations[feature] || feature);
+    return features.map(feature => 
+      featuresTranslations[feature]?.[targetLanguage] || feature
+    );
   };
 
   const handleGenerate = async () => {
@@ -245,14 +312,14 @@ const GameGenerator = () => {
         genre: gameGenre,
         theme: gameTheme,
         description: gameDescription || `An immersive ${gameGenre} game exploring ${gameTheme}`,
-        mechanics: quickTranslateGameMechanics([
+        mechanics: translateGameMechanics([
           'Turn-based gameplay',
           'Story-driven progression',
           'Cultural quiz elements',
           'Achievement system',
           'Multiplayer support'
         ], selectedLanguage),
-        features: quickTranslateGameFeatures([
+        features: translateGameFeatures([
           'Voice narration in selected language',
           'Authentic cultural graphics',
           'Educational content integration',
@@ -276,10 +343,14 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
     fonts: "devanagari_unicode"
   }
 };`,
-        downloadUrl: '#'
+        downloadUrl: '#',
+        language: selectedLanguage
       };
       
-      setGeneratedGame(mockGame);
+      // Translate the game content to selected language
+      const translatedGame = translateGameContent(mockGame, selectedLanguage);
+      
+      setGeneratedGame(translatedGame);
       setIsGenerating(false);
       
       toast({
