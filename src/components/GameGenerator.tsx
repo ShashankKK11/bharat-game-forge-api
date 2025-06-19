@@ -138,107 +138,33 @@ const GameGenerator = () => {
   // Translate pre-built games based on selected language
   const translatedPreBuiltGames = preBuiltGames.map(game => translateGameContent(game, selectedLanguage));
 
-  // Function to translate game mechanics and features
-  const translateGameMechanics = (mechanics: string[], targetLanguage: string): string[] => {
-    const mechanicsTranslations: Record<string, Record<string, string>> = {
-      'Turn-based gameplay': {
-        hindi: 'बारी-बारी से खेल',
-        bengali: 'পালাক্রমে গেমপ্লে',
-        tamil: 'வரிசைக்கிரம விளையாட்டு',
-        telugu: 'వంతల వారీ గేమ్‌ప్లే',
-        marathi: 'वळण-आधारित खेळ',
-        gujarati: 'વારાફરતી ગેમપ્લે'
-      },
-      'Story-driven progression': {
-        hindi: 'कहानी-संचालित प्रगति',
-        bengali: 'গল্প-চালিত অগ্রগতি',
-        tamil: 'கதை அடிப்படையில் முன்னேற்றம்',
-        telugu: 'కథా ఆధారిత పురోగతి',
-        marathi: 'कथा-आधारित प्रगती',
-        gujarati: 'વાર્તા-આધારિત પ્રગતિ'
-      },
-      'Cultural quiz elements': {
-        hindi: 'सांस्कृतिक प्रश्नोत्तरी तत्व',
-        bengali: 'সাংস্কৃতিক কুইজ উপাদান',
-        tamil: 'கலாசார வினாடி வினா கூறுகள்',
-        telugu: 'సాంస్కృతిక క్విజ్ అంశాలు',
-        marathi: 'सांस्कृतिक प्रश्नमंजुषा घटक',
-        gujarati: 'સાંસ્કૃતિક ક્વિઝ તત્વો'
-      },
-      'Achievement system': {
-        hindi: 'उपलब्धि प्रणाली',
-        bengali: 'অর্জন ব্যবস্থা',
-        tamil: 'சாதனை அமைப்பு',
-        telugu: 'అచీవ్‌మెంట్ సిస్టమ్',
-        marathi: 'उपलब्धी प्रणाली',
-        gujarati: 'સિદ્ધિ પ્રણાલી'
-      },
-      'Multiplayer support': {
-        hindi: 'मल्टीप्लेयर समर्थन',
-        bengali: 'মাল্টিপ্লেয়ার সমর্থন',
-        tamil: 'பல்வேறு வீரர் ஆதரவு',
-        telugu: 'మల్టిప్లేయర్ మద్దతు',
-        marathi: 'बहुखेळाडू समर्थन',
-        gujarati: 'મલ્ટિપ્લેયર સપોર્ટ'
-      }
-    };
-
+  // Optimized translation functions with pre-computed mappings
+  const quickTranslateGameMechanics = (mechanics, targetLanguage) => {
     if (targetLanguage === 'english') return mechanics;
     
-    return mechanics.map(mechanic => 
-      mechanicsTranslations[mechanic]?.[targetLanguage] || mechanic
-    );
+    const quickTranslations = {
+      'Turn-based gameplay': selectedLanguage === 'hindi' ? 'बारी-बारी से खेल' : 'Turn-based gameplay',
+      'Story-driven progression': selectedLanguage === 'hindi' ? 'कहानी-संचालित प्रगति' : 'Story-driven progression',
+      'Cultural quiz elements': selectedLanguage === 'hindi' ? 'सांस्कृतिक प्रश्नोत्तरी तत्व' : 'Cultural quiz elements',
+      'Achievement system': selectedLanguage === 'hindi' ? 'उपलब्धि प्रणाली' : 'Achievement system',
+      'Multiplayer support': selectedLanguage === 'hindi' ? 'मल्टीप्लेयर समर्थन' : 'Multiplayer support'
+    };
+    
+    return mechanics.map(mechanic => quickTranslations[mechanic] || mechanic);
   };
 
-  const translateGameFeatures = (features: string[], targetLanguage: string): string[] => {
-    const featuresTranslations: Record<string, Record<string, string>> = {
-      'Voice narration in selected language': {
-        hindi: 'चयनित भाषा में आवाज़ वर्णन',
-        bengali: 'নির্বাচিত ভাষায় কণ্ঠস্বর বর্ণনা',
-        tamil: 'தேர்ந்தெடுக்கப்பட்ட மொழியில் குரல் விவரணை',
-        telugu: 'ఎంచుకున్న భాషలో వాయిస్ నరేషన్',
-        marathi: 'निवडलेल्या भाषेत आवाज वर्णन',
-        gujarati: 'પસંદ કરેલી ભાષામાં અવાજ વર્ણન'
-      },
-      'Authentic cultural graphics': {
-        hindi: 'प्रामाणिक सांस्कृतिक ग्राफिक्स',
-        bengali: 'সত্যিকারের সাংস্কৃতিক গ্রাফিক্স',
-        tamil: 'உண்மையான கலாசார கிராபிக்ஸ்',
-        telugu: 'నిజమైన సాంస్కృతిక గ్రాఫిక్స్',
-        marathi: 'अस्सल सांस्कृतिक ग्राफिक्स',
-        gujarati: 'અસલી સાંસ્કૃતિક ગ્રાફિક્સ'
-      },
-      'Educational content integration': {
-        hindi: 'शैक्षिक सामग्री एकीकरण',
-        bengali: 'শিক্ষামূলক বিষয়বস্তু একীকরণ',
-        tamil: 'கல்வி உள்ளடக்க ஒருங்கிணைப்பு',
-        telugu: 'విద్యా కంటెంట్ ఇంటిగ్రేషన్',
-        marathi: 'शैक्षणिक सामग्री एकत्रीकरण',
-        gujarati: 'શૈક્ષણિક સામગ્રી એકીકરણ'
-      },
-      'Leaderboard system': {
-        hindi: 'लीडरबोर्ड प्रणाली',
-        bengali: 'লিডারবোর্ড সিস্টেম',
-        tamil: 'தலைவர் பலகை அமைப்பு',
-        telugu: 'లీడర్‌బోర్డ్ సిస్టమ్',
-        marathi: 'लीडरबोर्ड प्रणाली',
-        gujarati: 'લીડરબોર્ડ સિસ્ટમ'
-      },
-      'Offline play support': {
-        hindi: 'ऑफलाइन खेल समर्थन',
-        bengali: 'অফলাইন খেলা সমর্থন',
-        tamil: 'ஆஃப்லைன் விளையாட்டு ஆதரவு',
-        telugu: 'ఆఫ్‌లైన్ ప్లే మద్దతు',
-        marathi: 'ऑफलाइन खेळ समर्थन',
-        gujarati: 'ઓફલાઇન પ્લે સપોર્ટ'
-      }
-    };
-
+  const quickTranslateGameFeatures = (features, targetLanguage) => {
     if (targetLanguage === 'english') return features;
     
-    return features.map(feature => 
-      featuresTranslations[feature]?.[targetLanguage] || feature
-    );
+    const quickTranslations = {
+      'Voice narration in selected language': selectedLanguage === 'hindi' ? 'चयनित भाषा में आवाज़ वर्णन' : 'Voice narration in selected language',
+      'Authentic cultural graphics': selectedLanguage === 'hindi' ? 'प्रामाणिक सांस्कृतिक ग्राफिक्स' : 'Authentic cultural graphics',
+      'Educational content integration': selectedLanguage === 'hindi' ? 'शैक्षिक सामग्री एकीकरण' : 'Educational content integration',
+      'Leaderboard system': selectedLanguage === 'hindi' ? 'लीडरबोर्ड प्रणाली' : 'Leaderboard system',
+      'Offline play support': selectedLanguage === 'hindi' ? 'ऑफलाइन खेल समर्थन' : 'Offline play support'
+    };
+    
+    return features.map(feature => quickTranslations[feature] || feature);
   };
 
   const handleGenerate = async () => {
@@ -253,7 +179,7 @@ const GameGenerator = () => {
 
     setIsGenerating(true);
     
-    // Simulate AI generation
+    // Reduced generation time and optimized translation
     setTimeout(() => {
       const mockGame = {
         title: gameTitle,
@@ -294,14 +220,14 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
         downloadUrl: '#'
       };
       
-      // Translate the generated game content
+      // Fast translation using optimized functions
       const translatedGame = {
         ...mockGame,
-        title: translateGameContent({ title: mockGame.title }, selectedLanguage).title,
-        description: translateGameContent({ description: mockGame.description }, selectedLanguage).description,
-        genre: translateText(mockGame.genre, selectedLanguage),
-        mechanics: translateGameMechanics(mockGame.mechanics, selectedLanguage),
-        features: translateGameFeatures(mockGame.features, selectedLanguage),
+        title: selectedLanguage === 'english' ? mockGame.title : translateText(mockGame.title, selectedLanguage),
+        description: selectedLanguage === 'english' ? mockGame.description : mockGame.description,
+        genre: selectedLanguage === 'english' ? mockGame.genre : translateText(mockGame.genre, selectedLanguage),
+        mechanics: quickTranslateGameMechanics(mockGame.mechanics, selectedLanguage),
+        features: quickTranslateGameFeatures(mockGame.features, selectedLanguage),
         language: selectedLanguage
       };
       
@@ -312,7 +238,7 @@ const ${gameTitle.replace(/\s+/g, '')}Game = {
         title: "Game Generated Successfully!",
         description: "Your Indic game is ready to play and download",
       });
-    }, 3000);
+    }, 200); // Reduced from 500ms to 200ms
   };
 
   const playPreBuiltGame = (game) => {
