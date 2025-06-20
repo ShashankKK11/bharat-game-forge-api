@@ -1,4 +1,3 @@
-
 export interface Language {
   code: string;
   name: string;
@@ -30,9 +29,69 @@ export const languages: Language[] = [
   { code: 'bodo', name: 'बड़ो', english: 'Bodo' }
 ];
 
-// Translation mappings for common game terms
+// Comprehensive UI translations
+export const uiTranslations: Record<string, Record<string, string>> = {
+  'Choose Your Language': {
+    hindi: 'अपनी भाषा चुनें',
+    bengali: 'আপনার ভাষা চয়ন করুন',
+    tamil: 'உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்',
+    telugu: 'మీ భాషను ఎంచుకోండి',
+    marathi: 'तुमची भाषा निवडा',
+    gujarati: 'તમારી ભાષા પસંદ કરો',
+    kannada: 'ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+    malayalam: 'നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കുക',
+    punjabi: 'ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ',
+    urdu: 'اپنی زبان منتخب کریں'
+  },
+  'Generate games in any of the 22 official Indian languages with authentic cultural context': {
+    hindi: '22 आधिकारिक भारतीय भाषाओं में से किसी भी भाषा में प्रामाणिक सांस्कृतिक संदर्भ के साथ गेम बनाएं',
+    bengali: '22টি সরকারী ভারতীয় ভাষার যেকোনো একটিতে প্রামাণিক সাংস্কৃতিক প্রেক্ষাপট সহ গেম তৈরি করুন',
+    tamil: '22 அதிகாரப்பூர்வ இந்திய மொழிகளில் ஏதேனும் ஒன்றில் உண்மையான கலாச்சார சூழலுடன் விளையாட்டுகளை உருவாக்குங்கள்',
+    telugu: '22 అధికారిక భారతీయ భాషలలో దేనిలోనైనా ప్రామాణికమైన సాంస్కృతిక సందర్భంతో గేమ్‌లను రూపొందించండి',
+    marathi: '22 अधिकृत भारतीय भाषांपैकी कोणत्याही भाषेत अस्सल सांस्कृतिक संदर्भासह गेम तयार करा',
+    gujarati: '22 અધિકૃત ભારતીય ભાષાઓમાંથી કોઈપણમાં પ્રામાણિક સાંસ્કૃતિક સંદર્ભ સાથે ગેમ્સ બનાવો'
+  },
+  'All Indian Languages Supported': {
+    hindi: 'सभी भारतीय भाषाएं समर्थित',
+    bengali: 'সকল ভারতীয় ভাষা সমর্থিত',
+    tamil: 'அனைத்து இந்திய மொழிகளும் ஆதரிக்கப்படுகின்றன',
+    telugu: 'అన్ని భారతీయ భాషలకు మద్దతు ఉంది',
+    marathi: 'सर्व भारतीय भाषा समर्थित',
+    gujarati: 'બધી ભારતીય ભાષાઓ સપોર્ટેડ'
+  },
+  'Selected': {
+    hindi: 'चयनित',
+    bengali: 'নির্বাচিত',
+    tamil: 'தேர்ந்தெடுக்கப்பட்டது',
+    telugu: 'ఎంపిక చేయబడింది',
+    marathi: 'निवडलेले',
+    gujarati: 'પસંદ કરેલ'
+  },
+  'Generate Your Game': {
+    hindi: 'अपना गेम बनाएं',
+    bengali: 'আপনার গেম তৈরি করুন',
+    tamil: 'உங்கள் விளையாட்டை உருவாக்குங்கள்',
+    telugu: 'మీ గేమ్‌ను రూపొందించండి',
+    marathi: 'तुमचा गेम तयार करा',
+    gujarati: 'તમારી ગેમ બનાવો'
+  },
+  'Use our AI-powered generator to create culturally rich games in minutes': {
+    hindi: 'मिनटों में सांस्कृतिक रूप से समृद्ध गेम बनाने के लिए हमारे AI-संचालित जेनरेटर का उपयोग करें',
+    bengali: 'মিনিটের মধ্যে সাংস্কৃতিকভাবে সমৃদ্ধ গেম তৈরি করতে আমাদের AI-চালিত জেনারেটর ব্যবহার করুন',
+    tamil: 'நிமிடங்களில் கலாச்சார ரீதியாக வளமான கேம்களை உருவாக்க எங்கள் AI-இயங்கும் ஜெனரேட்டரைப் பயன்படுத்துங்கள்'
+  },
+  'Ready-to-Play Games': {
+    hindi: 'खेलने के लिए तैयार गेम्स',
+    bengali: 'খেলার জন্য প্রস্তুত গেমস',
+    tamil: 'விளையாட தயார் விளையாட்டுகள்',
+    telugu: 'ఆట ఆడటానికి సిద్ధంగా ఉన్న గేమ్‌లు',
+    marathi: 'खेळण्यासाठी तयार गेम्स',
+    gujarati: 'રમવા માટે તૈયાર ગેમ્સ'
+  }
+};
+
+// Game genre translations
 export const gameTranslations: Record<string, Record<string, string>> = {
-  // Game genres
   adventure: {
     hindi: 'साहसिक',
     bengali: 'অ্যাডভেঞ্চার',
@@ -95,59 +154,19 @@ export const gameTranslations: Record<string, Record<string, string>> = {
   }
 };
 
-// UI text translations
-export const uiTranslations: Record<string, Record<string, string>> = {
-  'Generate Game': {
-    hindi: 'गेम बनाएं',
-    bengali: 'গেম তৈরি করুন',
-    tamil: 'விளையாட்டு உருவாக்கு',
-    telugu: 'గేమ్ సృష్టించండి',
-    marathi: 'गेम तयार करा',
-    gujarati: 'ગેમ બનાવો',
-    kannada: 'ಆಟವನ್ನು ರಚಿಸಿ',
-    malayalam: 'ഗെയിം സൃഷ്ടിക്കുക',
-    punjabi: 'ਗੇਮ ਬਣਾਓ',
-    urdu: 'گیم بنائیں'
-  },
-  'Play Now': {
-    hindi: 'अभी खेलें',
-    bengali: 'এখনি খেলুন',
-    tamil: 'இப்போது விளையாடு',
-    telugu: 'ఇప్పుడే ఆడండి',
-    marathi: 'आता खेळा',
-    gujarati: 'હવે રમો',
-    kannada: 'ಈಗ ಆಡಿ',
-    malayalam: 'ഇപ്പോൾ കളിക്കുക',
-    punjabi: 'ਹੁਣੇ ਖੇਡੋ',
-    urdu: 'اب کھیلیں'
-  },
-  'Battle Now': {
-    hindi: 'अभी युद्ध करें',
-    bengali: 'এখনি যুদ্ধ করুন',
-    tamil: 'இப்போது போர்',
-    telugu: 'ఇప్పుడే యుద్ధం',
-    marathi: 'आता लढा',
-    gujarati: 'હવે યુદ્ધ',
-    kannada: 'ಈಗ ಯುದ್ಧ',
-    malayalam: 'ഇപ്പോൾ യുദ്ധം',
-    punjabi: 'ਹੁਣੇ ਲੜਾਈ',
-    urdu: 'اب جنگ کریں'
-  }
-};
-
 export const translateText = (text: string, targetLanguage: string): string => {
   if (targetLanguage === 'english') return text;
   
-  // Check if it's a UI text
+  // Check UI translations first
   const uiTranslation = uiTranslations[text]?.[targetLanguage];
   if (uiTranslation) return uiTranslation;
   
-  // Check if it's a game genre
+  // Check game genre translations
   const genreTranslation = gameTranslations[text.toLowerCase()]?.[targetLanguage];
   if (genreTranslation) return genreTranslation;
   
-  // For complex text, return a translated version (in a real app, this would call a translation API)
-  return text; // Fallback to original text
+  // Return original text if no translation found
+  return text;
 };
 
 export const translateGameContent = (game: any, targetLanguage: string) => {
