@@ -13,6 +13,172 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Add custom CSS animations
+st.markdown("""
+<style>
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes glow {
+        0% {
+            box-shadow: 0 0 5px rgba(99, 102, 241, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.8);
+        }
+        100% {
+            box-shadow: 0 0 5px rgba(99, 102, 241, 0.5);
+        }
+    }
+    
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        70% {
+            transform: scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .animated-header {
+        animation: fadeInUp 1s ease-out;
+    }
+    
+    .animated-card {
+        animation: slideInRight 0.8s ease-out;
+        transition: all 0.3s ease;
+    }
+    
+    .animated-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .pulse-button {
+        animation: pulse 2s infinite;
+        transition: all 0.3s ease;
+    }
+    
+    .pulse-button:hover {
+        animation: none;
+        transform: scale(1.05);
+    }
+    
+    .glow-effect {
+        animation: glow 2s ease-in-out infinite;
+    }
+    
+    .bounce-in {
+        animation: bounceIn 0.6s ease-out;
+    }
+    
+    .hover-scale {
+        transition: transform 0.2s ease;
+    }
+    
+    .hover-scale:hover {
+        transform: scale(1.02);
+    }
+    
+    .fade-in-delayed {
+        animation: fadeInUp 1s ease-out 0.3s both;
+    }
+    
+    .shake-error {
+        animation: shake 0.5s ease-in-out;
+    }
+    
+    .loading-dots::after {
+        content: '';
+        animation: loading-dots 1.5s infinite;
+    }
+    
+    @keyframes loading-dots {
+        0%, 20% { content: ''; }
+        40% { content: '.'; }
+        60% { content: '..'; }
+        80%, 100% { content: '...'; }
+    }
+    
+    .gradient-background {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        animation: gradient-shift 3s ease infinite;
+    }
+    
+    @keyframes gradient-shift {
+        0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        50% { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }
+    }
+    
+    .stButton > button {
+        transition: all 0.3s ease !important;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
+    }
+    
+    .stSelectbox > div > div {
+        transition: all 0.3s ease !important;
+    }
+    
+    .stTextInput > div > div > input {
+        transition: all 0.3s ease !important;
+    }
+    
+    .stTextInput > div > div > input:focus {
+        transform: scale(1.02) !important;
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.3) !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Language data
 LANGUAGES = {
     'english': {'name': 'English', 'native': 'English'},
@@ -141,6 +307,11 @@ def generate_game_html(game_data, language):
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: gradient-shift 3s ease infinite;
+        }}
+        @keyframes gradient-shift {{
+            0%, 100% {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }}
+            50% {{ background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }}
         }}
         .game-container {{
             max-width: 800px;
@@ -151,6 +322,17 @@ def generate_game_html(game_data, language):
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }}
+        @keyframes fadeInUp {{
+            from {{
+                opacity: 0;
+                transform: translateY(30px);
+            }}
+            to {{
+                opacity: 1;
+                transform: translateY(0);
+            }}
         }}
         .game-title {{
             font-size: 2.5em;
@@ -173,9 +355,16 @@ def generate_game_html(game_data, language):
             cursor: pointer;
             transition: transform 0.3s ease;
             margin: 20px 10px;
+            animation: pulse 2s infinite;
+        }}
+        @keyframes pulse {{
+            0% {{ transform: scale(1); }}
+            50% {{ transform: scale(1.05); }}
+            100% {{ transform: scale(1); }}
         }}
         .play-button:hover {{
-            transform: scale(1.05);
+            transform: scale(1.1);
+            animation: none;
         }}
     </style>
 </head>
@@ -226,9 +415,9 @@ if 'generated_game' not in st.session_state:
 
 # Main app
 def main():
-    # Header
+    # Header with animation
     st.markdown("""
-    <div style="text-align: center; padding: 2rem 0;">
+    <div class="animated-header" style="text-align: center; padding: 2rem 0;">
         <h1 style="color: #6366f1; font-size: 3rem; margin-bottom: 1rem;">
             🎮 Indic Game Generator
         </h1>
@@ -238,7 +427,8 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-    # Language Selector
+    # Language Selector with glow effect
+    st.sidebar.markdown('<div class="glow-effect">', unsafe_allow_html=True)
     st.sidebar.header("🌍 Language Selection")
     language_options = {code: f"{data['name']} ({data['native']})" 
                        for code, data in LANGUAGES.items()}
@@ -249,6 +439,7 @@ def main():
         format_func=lambda x: language_options[x],
         index=list(language_options.keys()).index(st.session_state.selected_language)
     )
+    st.sidebar.markdown('</div>', unsafe_allow_html=True)
     
     if selected_lang != st.session_state.selected_language:
         st.session_state.selected_language = selected_lang
@@ -258,13 +449,14 @@ def main():
     col1, col2 = st.columns([1, 1])
 
     with col1:
+        st.markdown('<div class="fade-in-delayed">', unsafe_allow_html=True)
         st.header("🎯 Ready-to-Play Games")
         
-        # Display pre-built games
+        # Display pre-built games with animations
         for i, game in enumerate(PREBUILT_GAMES):
             with st.container():
                 st.markdown(f"""
-                <div style="border: 2px solid #e5e7eb; border-radius: 10px; padding: 1rem; margin: 1rem 0; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
+                <div class="animated-card hover-scale" style="border: 2px solid #e5e7eb; border-radius: 10px; padding: 1rem; margin: 1rem 0; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
                     <h4 style="color: #374151; margin-bottom: 0.5rem;">🎮 {game['title']}</h4>
                     <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">{game['description']}</p>
                     <div style="margin-bottom: 1rem;">
@@ -274,17 +466,19 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                if st.button(f"🎮 {translate_text('Play Now', st.session_state.selected_language)}", key=f"play_{i}"):
+                if st.button(f"🎮 {translate_text('Play Now', st.session_state.selected_language)}", key=f"play_{i}", help="Click to load this game"):
                     st.session_state.generated_game = {
                         **game,
                         'language': st.session_state.selected_language,
                         'generated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     }
+                    st.markdown('<div class="bounce-in">', unsafe_allow_html=True)
                     st.success(f"✅ {game['title']} loaded successfully!")
+                    st.markdown('</div>', unsafe_allow_html=True)
 
         st.header("🛠️ Custom Game Generator")
         
-        # Custom game form
+        # Custom game form with animated inputs
         with st.form("game_generator_form"):
             game_title = st.text_input("🎮 Game Title *", placeholder="e.g., Arjuna's Quest")
             game_genre = st.selectbox("🎯 Genre *", options=[''] + GENRES)
@@ -296,22 +490,24 @@ def main():
             
             if submitted:
                 if not game_title or not game_genre or not game_theme:
+                    st.markdown('<div class="shake-error">', unsafe_allow_html=True)
                     st.error("❌ Please fill in all required fields (marked with *)")
+                    st.markdown('</div>', unsafe_allow_html=True)
                 else:
-                    # Show generation progress
+                    # Show animated generation progress
                     progress_bar = st.progress(0)
                     status_text = st.empty()
                     
                     for i in range(100):
                         progress_bar.progress(i + 1)
                         if i < 30:
-                            status_text.text("🤖 Analyzing cultural context...")
+                            status_text.markdown('<div class="loading-dots">🤖 Analyzing cultural context</div>', unsafe_allow_html=True)
                         elif i < 60:
-                            status_text.text("🎨 Generating game mechanics...")
+                            status_text.markdown('<div class="loading-dots">🎨 Generating game mechanics</div>', unsafe_allow_html=True)
                         elif i < 90:
-                            status_text.text("🌍 Translating to selected language...")
+                            status_text.markdown('<div class="loading-dots">🌍 Translating to selected language</div>', unsafe_allow_html=True)
                         else:
-                            status_text.text("✨ Finalizing your game...")
+                            status_text.markdown('<div class="loading-dots">✨ Finalizing your game</div>', unsafe_allow_html=True)
                         time.sleep(0.02)
                     
                     # Generate the game
@@ -343,17 +539,21 @@ def main():
                     st.session_state.generated_game = generated_game
                     progress_bar.progress(100)
                     status_text.text("🎉 Game generated successfully!")
+                    st.markdown('<div class="bounce-in">', unsafe_allow_html=True)
                     st.success("✅ Your Indic game is ready to play and download!")
+                    st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
+        st.markdown('<div class="animated-card">', unsafe_allow_html=True)
         st.header("🎮 Generated Game Preview")
         
         if st.session_state.generated_game:
             game = st.session_state.generated_game
             
-            # Game preview card
+            # Game preview card with animations
             st.markdown(f"""
-            <div style="border: 3px solid #10b981; border-radius: 15px; padding: 2rem; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); margin: 1rem 0;">
+            <div class="bounce-in" style="border: 3px solid #10b981; border-radius: 15px; padding: 2rem; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); margin: 1rem 0;">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <h2 style="color: #059669; margin-bottom: 1rem;">🎮 {game['title']}</h2>
                     <div style="margin-bottom: 1rem;">
@@ -402,17 +602,22 @@ const {game['title'].replace(' ', '')}Game = {{
             </div>
             """, unsafe_allow_html=True)
             
-            # Action buttons
+            # Action buttons with pulse animation
             col_play, col_download = st.columns(2)
             
             with col_play:
+                st.markdown('<div class="pulse-button">', unsafe_allow_html=True)
                 if st.button("🎮 Play Complete Game", use_container_width=True):
+                    st.markdown('<div class="bounce-in">', unsafe_allow_html=True)
                     st.info("🎮 Game launched! (This would open the full game in a new window)")
+                    st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
                     
             with col_download:
                 # Generate HTML file
                 html_content = generate_game_html(game, game['language'])
                 
+                st.markdown('<div class="pulse-button">', unsafe_allow_html=True)
                 st.download_button(
                     label="💾 Download Complete Game",
                     data=html_content,
@@ -420,10 +625,11 @@ const {game['title'].replace(' ', '')}Game = {{
                     mime="text/html",
                     use_container_width=True
                 )
+                st.markdown('</div>', unsafe_allow_html=True)
             
-            # Game info
+            # Game info with fade animation
             st.markdown(f"""
-            <div style="margin-top: 2rem; padding: 1rem; background: #f3f4f6; border-radius: 10px;">
+            <div class="fade-in-delayed" style="margin-top: 2rem; padding: 1rem; background: #f3f4f6; border-radius: 10px;">
                 <h5 style="color: #374151;">📊 Game Information:</h5>
                 <p style="color: #6b7280; margin: 0.5rem 0;"><strong>Language:</strong> {LANGUAGES[game['language']]['name']} ({LANGUAGES[game['language']]['native']})</p>
                 <p style="color: #6b7280; margin: 0.5rem 0;"><strong>Generated:</strong> {game['generated_at']}</p>
@@ -432,19 +638,20 @@ const {game['title'].replace(' ', '')}Game = {{
             """, unsafe_allow_html=True)
             
         else:
-            # Placeholder when no game is generated
+            # Placeholder when no game is generated with subtle animation
             st.markdown("""
-            <div style="border: 2px dashed #d1d5db; border-radius: 15px; padding: 3rem; text-align: center; background: #f9fafb;">
-                <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.3;">🎮</div>
+            <div class="animated-card" style="border: 2px dashed #d1d5db; border-radius: 15px; padding: 3rem; text-align: center; background: #f9fafb;">
+                <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.3; animation: pulse 2s infinite;">🎮</div>
                 <h3 style="color: #9ca3af; margin-bottom: 1rem;">Your Generated Game Will Appear Here</h3>
                 <p style="color: #6b7280;">Choose from ready-to-play games or create your custom game</p>
             </div>
             """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    # Footer
+    # Footer with animation
     st.markdown("---")
     st.markdown("""
-    <div style="text-align: center; padding: 2rem 0; color: #6b7280;">
+    <div class="animated-header" style="text-align: center; padding: 2rem 0; color: #6b7280;">
         <p>🎮 Built with Streamlit • Promoting Indian Culture Through Gaming 🇮🇳</p>
     </div>
     """, unsafe_allow_html=True)
