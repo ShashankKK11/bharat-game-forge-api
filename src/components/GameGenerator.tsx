@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -91,6 +92,14 @@ const GameGenerator = () => {
       description: "Design and construct magnificent Indian temples while learning about architectural principles and cultural significance.",
       mechanics: ['Building Design', 'Resource Management', 'Historical Accuracy', 'Cultural Integration'],
       features: ['Authentic Styles', 'Educational Content', 'Visual Showcase', 'Historical Context']
+    },
+    {
+      title: "Epic Battles of Kurukshetra",
+      genre: "adventure",
+      theme: "mythology - mahabharata",
+      description: "Experience the greatest battles of the Mahabharata as a warrior. Fight alongside legendary heroes in epic combat sequences.",
+      mechanics: ['Real-time Combat', 'Weapon Mastery', 'Formation Strategies', 'Hero Commands'],
+      features: ['Epic Battle Scenes', 'Multiple Warriors', 'Strategic Warfare', 'Legendary Weapons']
     },
     {
       title: "Warrior's Path: Arjuna",
@@ -286,7 +295,7 @@ const ${translatedGame.title.replace(/\s+/g, '')}Game = {
                   <p className="text-sm text-gray-600 mb-3">{game.description}</p>
                   <div className="flex flex-wrap gap-1 mb-4">
                     <span className={`text-xs px-2 py-1 rounded ${
-                      game.genre === 'action' || t('action') === game.genre
+                      game.genre === 'action' || t('action') === game.genre || game.genre === 'adventure' || t('adventure') === game.genre
                         ? 'bg-red-100 text-red-800' 
                         : game.genre === 'strategy' || t('strategy') === game.genre
                         ? 'bg-blue-100 text-blue-800'
@@ -301,14 +310,14 @@ const ${translatedGame.title.replace(/\s+/g, '')}Game = {
                   <Button 
                     onClick={() => playPreBuiltGame(preBuiltGames[index])}
                     className={`w-full ${
-                      game.genre === 'action' || t('action') === game.genre
+                      game.genre === 'action' || t('action') === game.genre || game.genre === 'adventure' || t('adventure') === game.genre
                         ? 'bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700'
                         : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
                     }`}
                     size="sm"
                   >
                     <Play className="w-4 h-4 mr-2" />
-                    {game.genre === 'action' || t('action') === game.genre
+                    {game.genre === 'action' || t('action') === game.genre || game.genre === 'adventure' || t('adventure') === game.genre
                       ? t('Battle Now')
                       : t('Play Now')}
                   </Button>
